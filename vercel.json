@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/magaza/:slug", "destination": "/index.html" },
+    { "source": "/magaza/:slug/(.*)", "destination": "/index.html" }
+  ]
+}
