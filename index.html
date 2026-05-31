@@ -308,7 +308,9 @@ const waPhone = () => STORE?.whatsapp_phone || ''
 
 function toggle (pid, vid) {
   const k = key(pid, vid), i = list.indexOf(k)
-  i > -1 ? list.splice(i, 1) : list.push(k)
+  const adding = i === -1
+  adding ? list.push(k) : list.splice(i, 1)
+  if (adding) incrementProductInterest(pid)
   save()
 }
 
@@ -321,7 +323,16 @@ function toggleAll (pid) {
     if (allIn && i > -1) list.splice(i, 1)
     if (!allIn && i === -1) list.push(k)
   })
+  if (!allIn) incrementProductInterest(pid)
   save()
+}
+
+function incrementProductInterest (productId) {
+  fetch(`${SB_URL}/rest/v1/rpc/increment_product_interest`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_product_id: productId })
+  }).catch(() => {})
 }
 
 function findVariation (pid, vid) {
@@ -368,6 +379,13 @@ async function fetchData () {
   // Check ?liste= mode (after products are loaded)
   if (checkListeMode()) return
 
+  // Katalog açılışını say
+  fetch(`${SB_URL}/rest/v1/rpc/increment_catalog_views`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_slug: slug })
+  }).catch(() => {})
+
   buildBrandFilter()
   render()
 }
@@ -408,7 +426,8 @@ function filtered () {
 }
 
 function render () {
-  document.getElementById('skeletonGrid').style.display = 'none'
+  const skeleton = document.getElementById('skeletonGrid')
+  if (skeleton) skeleton.style.display = 'none'
   const c = document.getElementById('productContainer')
   const f = filtered()
   document.getElementById('countLabel').textContent = f.length + ' ürün'
