@@ -66,8 +66,8 @@ ul{list-style:none;padding:0;margin:0;}
 .catalog{padding-block:28px;padding-bottom:120px;}
 .product-group{margin-bottom:40px;}
 .product-group:last-child{margin-bottom:0;}
-.group-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
-.group-header-left{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.group-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.group-header-left{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;flex:1;min-width:0;}
 .brand-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
 .group-name{font-weight:600;font-size:16px;letter-spacing:-.02em;}
 .group-price{font-size:13px;color:var(--muted);}
@@ -77,6 +77,10 @@ ul{list-style:none;padding:0;margin:0;}
 .group-btn:active{transform:scale(0.95);}
 .group-btn.wa{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.06);}
 .group-btn.wa:hover{background:#25d366;color:#fff;}
+@media(max-width:500px){
+  .group-header-right{flex:0 0 100%;justify-content:flex-end;}
+  .group-btn{font-size:10px;padding:5px 11px;}
+}
 
 /* GRID — 3:4 görseller */
 .variants-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
@@ -575,7 +579,7 @@ function renderPanel () {
     h += `<div class="panel-item">`
     h += `<div class="panel-item-thumb">${v.image_url ? `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" loading="lazy"/>` : ''}</div>`
     h += `<div class="panel-item-info"><div class="panel-item-name">${esc(p.brand ? p.brand + ' ' : '')}${esc(p.name)} — ${esc(v.name || '')}</div><div class="panel-item-sub">${esc(p.code || '')}</div></div>`
-    h += `<span class="panel-item-price">${p.price ? fmt(+p.price) : ''}</span>`
+    h += `<span class="panel-item-price">${+p.price ? fmt(+p.price) : ''}</span>`
     h += `<button class="panel-item-remove" aria-label="Listeden çıkar" data-a="t" data-pid="${pid}" data-vid="${vid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`
     h += `</div>`
   })
@@ -608,7 +612,7 @@ function sendProductWhatsApp (pid) {
   const firstImg = p.variations.find(v => v.image_url)?.image_url || ''
   let msg = `Merhaba! Şu ürün hakkında bilgi almak istiyorum:\n\n*${title}*`
   if (names) msg += `\nRenkler: ${names}`
-  if (p.price) msg += `\nFiyat: ${fmt(+p.price)}`
+  if (+p.price) msg += `\nFiyat: ${fmt(+p.price)}`
   if (firstImg) msg += `\n\n${firstImg}`
   window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
 }
@@ -663,7 +667,7 @@ function checkListeMode () {
         <div style="font-size:14px;font-weight:500;">${esc(p.name)}</div>
         <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(v.name || '')}${p.code ? ' · <span style="font-family:ui-monospace,monospace;font-size:10px;">' + esc(p.code) + '</span>' : ''}</div>
       </div>
-      ${p.price ? `<div style="font-size:15px;font-weight:700;flex-shrink:0;">${fmt(+p.price)}</div>` : ''}`
+      ${+p.price ? `<div style="font-size:15px;font-weight:700;flex-shrink:0;">${fmt(+p.price)}</div>` : ''}`
     listDiv.appendChild(item)
   })
   root.appendChild(listDiv)
