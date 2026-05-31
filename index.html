@@ -73,8 +73,8 @@ ul{list-style:none;padding:0;margin:0;}
 .group-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .group-btn{font-size:11px;font-weight:500;letter-spacing:.03em;padding:6px 12px;border:1px solid var(--border);border-radius:100px;transition:border-color .15s,background .15s,color .15s;white-space:nowrap;}
 .group-btn:hover{border-color:var(--fg);background:var(--fg);color:#fff;}
-.group-btn.wa{border-color:transparent;color:var(--muted);}
-.group-btn.wa:hover{color:var(--fg);background:#f0efeb;}
+.group-btn.wa{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.06);}
+.group-btn.wa:hover{background:#25d366;color:#fff;}
 
 /* GRID — 3:4 görseller */
 .variants-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
@@ -454,7 +454,6 @@ function render () {
       h += `</button></div>`
       h += `<div class="variant-info">`
       if (v.name && v.name.trim()) h += `<span class="variant-name">${esc(v.name)}</span>`
-      if (priceStr) h += `<span class="variant-price">${priceStr}</span>`
       if (p.code) h += `<span class="variant-code">${esc(p.code)}</span>`
       h += `</div></div>`
     })
@@ -556,8 +555,13 @@ function sendWhatsApp (items) {
 function sendProductWhatsApp (pid) {
   const p = PRODUCTS.find(x => x.id === pid)
   if (!p) return
+  const title = `${p.brand ? p.brand + ' ' : ''}${p.name}${p.code ? ' (' + p.code + ')' : ''}`
   const names = p.variations.map(v => v.name).filter(Boolean).join(', ')
-  const msg = `Merhaba! ${p.brand ? p.brand + ' ' : ''}${p.name}${names ? ' (' + names + ')' : ''} hakkında bilgi almak istiyorum.`
+  const firstImg = p.variations.find(v => v.image_url)?.image_url || ''
+  let msg = `Merhaba! Şu ürün hakkında bilgi almak istiyorum:\n\n*${title}*`
+  if (names) msg += `\nRenkler: ${names}`
+  if (p.price) msg += `\nFiyat: ${fmt(+p.price)}`
+  if (firstImg) msg += `\n\n${firstImg}`
   window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
 }
 
@@ -619,11 +623,7 @@ function checkListeMode () {
   const footerDiv = document.createElement('div')
   footerDiv.style.cssText = 'padding:20px 20px 0;'
   footerDiv.innerHTML = `
-    ${total ? `<div style="background:#fff;border-radius:12px;border:1px solid #e5e4e0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><span style="font-size:13px;color:#888;">Toplam</span><span style="font-size:17px;font-weight:700;">${fmt(total)}</span></div>` : ''}
-    <a href="https://wa.me/${waPhone()}?text=${encodeURIComponent('Merhaba! Bu ürünler için sipariş vermek istiyorum:\n' + window.location.href)}"
-       target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#111;color:#fff;padding:14px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;">
-      WhatsApp'tan Sipariş Ver
-    </a>`
+    ${total ? `<div style="background:#fff;border-radius:12px;border:1px solid #e5e4e0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:13px;color:#888;">Toplam</span><span style="font-size:17px;font-weight:700;">${fmt(total)}</span></div>` : ''}`
   root.appendChild(footerDiv)
   document.body.appendChild(root)
   return true
