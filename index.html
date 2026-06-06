@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 <style>
 :root{
   --bg:#f2f2f2;--surface:#fff;--fg:#0d0d0d;--muted:#666;--border:#e0e0e0;
@@ -605,7 +607,7 @@ function buildShareURL (items) {
 
 function sendWhatsApp (items) {
   const link = buildShareURL(items)
-  const msg = (STORE?.catalog_share_message || 'Merhaba! Seçtiğim ürünleri görmek için:') + '\n' + link
+  const msg = (STORE?.catalog_share_message || 'Merhaba, bu ürünler hakkında bilgi almak istiyorum:') + '\n' + link
   window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
 }
 
