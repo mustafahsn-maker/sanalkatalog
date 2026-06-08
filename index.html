@@ -605,23 +605,99 @@ function buildShareURL (items) {
   return window.location.origin + window.location.pathname + '?liste=' + encodeURIComponent(codes.join(','))
 }
 
+let _pendingWhatsAppFn = null
+
 function sendWhatsApp (items) {
-  const link = buildShareURL(items)
-  const msg = (STORE?.catalog_share_message || 'Merhaba, bu ürünler hakkında bilgi almak istiyorum:') + '\n' + link
-  window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
+  captureLeadAndSend((name, phone) => {
+    const link = buildShareURL(items)
+    let msg = 'Bu listedeki ürünlerle ilgili bilgi almak istiyordum:\n' + link
+    if (name) msg = name + ':\n' + msg
+    window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
+    const vids = items.map(k => {
+      const [pid, vid] = k.split('::')
+      return findVariation(pid, vid)?.id || ''
+    }).filter(Boolean)
+    saveLead(name, phone, vids)
+  })
 }
 
 function sendProductWhatsApp (pid) {
   const p = PRODUCTS.find(x => x.id === pid)
   if (!p) return
-  const title = `${p.brand ? p.brand + ' ' : ''}${p.name}${p.code ? ' (' + p.code + ')' : ''}`
-  const names = p.variations.map(v => v.name).filter(Boolean).join(', ')
-  const firstImg = p.variations.find(v => v.image_url)?.image_url || ''
-  let msg = `Merhaba! Şu ürün hakkında bilgi almak istiyorum:\n\n*${title}*`
-  if (names) msg += `\nRenkler: ${names}`
-  if (+p.price) msg += `\nFiyat: ${fmt(+p.price)}`
-  if (firstImg) msg += `\n\n${firstImg}`
-  window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
+  const firstVid = p.variations.find(v => v.status !== 'Gizli')?.id || p.variations[0]?.id
+  if (!firstVid) return
+  sendWhatsApp([pid + '::' + firstVid])
+}
+
+function captureLeadAndSend (whatsappFn) {
+  _pendingWhatsAppFn = whatsappFn
+  const modal = document.getElementById('leadModal')
+  modal.style.display = 'flex'
+  setTimeout(() => document.getElementById('leadName').focus(), 100)
+}
+
+function closeLeadModal () {
+  document.getElementById('leadModal').style.display = 'none'
+  document.getElementById('leadName').value = ''
+  document.getElementById('leadPhone').value = ''
+}
+
+function saveLead (name, phone, variationIds) {
+  if (!name) return
+  try {
+    const leads = JSON.parse(localStorage.getItem('sk_leads') || '[]')
+    leads.unshift({ name, phone, items: variationIds.length, store: STORE?.store_name || '', slug: STORE?.slug || '', ts: new Date().toISOString() })
+    localStorage.setItem('sk_leads', JSON.stringify(leads.slice(0, 200)))
+  } catch (_) {}
+  const userId = STORE?.user_id
+  const storeSlug = STORE?.slug
+  if (!userId || !storeSlug) return
+  const payload = {
+    id: crypto.randomUUID(),
+    store_slug: storeSlug,
+    user_id: userId,
+    name,
+    phone: phone || '',
+    interest_count: variationIds.length,
+    last_seen: new Date().toISOString(),
+    marketing_opt_in: false,
+    variation_ids: variationIds
+  }
+  fetch(`${SB_URL}/rest/v1/leads`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(payload)
+  }).catch(() => {})
+}
+
+function createLeadModal () {
+  const modal = document.createElement('div')
+  modal.id = 'leadModal'
+  modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:9000;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.45);'
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;font-family:'DM Sans',system-ui,sans-serif;">
+      <div style="width:36px;height:4px;background:#e5e4e0;border-radius:2px;margin:0 auto 20px;"></div>
+      <h2 style="font-size:17px;font-weight:700;margin:0 0 4px;color:#0d0d0d;">WhatsApp'a bağlanıyor</h2>
+      <p style="font-size:13px;color:#888;margin:0 0 20px;">İsteğe bağlı bilgilerini bırakabilirsin.</p>
+      <input id="leadName" placeholder="Ad Soyad (isteğe bağlı)" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;color:#0d0d0d;">
+      <input id="leadPhone" placeholder="Telefon (isteğe bağlı)" type="tel" autocomplete="tel" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;color:#0d0d0d;">
+      <button id="leadContinue" style="width:100%;background:#25d366;color:#fff;border:none;border-radius:100px;padding:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:8px;">WhatsApp'ı Aç</button>
+      <button id="leadSkip" style="width:100%;background:transparent;color:#888;border:1px solid #e5e4e0;border-radius:100px;padding:14px;font-size:15px;font-family:inherit;cursor:pointer;">Atla</button>
+    </div>`
+  document.body.appendChild(modal)
+  modal.addEventListener('click', e => { if (e.target === modal) { closeLeadModal(); _pendingWhatsAppFn && _pendingWhatsAppFn('', ''); _pendingWhatsAppFn = null } })
+  document.getElementById('leadContinue').onclick = () => {
+    const name = document.getElementById('leadName').value.trim()
+    const phone = document.getElementById('leadPhone').value.trim()
+    closeLeadModal()
+    if (_pendingWhatsAppFn) { _pendingWhatsAppFn(name, phone); _pendingWhatsAppFn = null }
+  }
+  document.getElementById('leadSkip').onclick = () => {
+    closeLeadModal()
+    if (_pendingWhatsAppFn) { _pendingWhatsAppFn('', ''); _pendingWhatsAppFn = null }
+  }
+  document.getElementById('leadName').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('leadPhone').focus() })
+  document.getElementById('leadPhone').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('leadContinue').click() })
 }
 
 // ── LİSTE SAYFASI (?liste= parametresi) ──────────────────────────────────────
@@ -741,6 +817,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
 })()
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+createLeadModal()
 fetchData()
 </script>
 </body>
