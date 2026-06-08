@@ -607,9 +607,27 @@ function buildShareURL (items) {
 
 let _pendingWhatsAppFn = null
 
+function genListCode () {
+  return Math.random().toString(36).slice(2, 8).toUpperCase()
+}
+
+function buildShareURLWithCustomer (items, name, phone) {
+  const vids = items.map(k => {
+    const [pid, vid] = k.split('::')
+    return findVariation(pid, vid)?.id || ''
+  }).filter(Boolean)
+  const params = new URLSearchParams()
+  params.set('liste', vids.join(','))
+  if (name) params.set('ad', name)
+  if (phone) params.set('tel', phone)
+  params.set('kod', genListCode())
+  params.set('tarih', new Date().toLocaleDateString('tr-TR'))
+  return window.location.origin + window.location.pathname + '?' + params.toString()
+}
+
 function sendWhatsApp (items) {
   captureLeadAndSend((name, phone) => {
-    const link = buildShareURL(items)
+    const link = buildShareURLWithCustomer(items, name, phone)
     let msg = 'Bu listedeki ürünlerle ilgili bilgi almak istiyordum:\n' + link
     if (name) msg = name + ':\n' + msg
     window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
@@ -706,6 +724,11 @@ function checkListeMode () {
   const raw = params.get('liste')
   if (!raw) return false
 
+  const customerName  = params.get('ad') || ''
+  const customerPhone = params.get('tel') || ''
+  const listCode      = params.get('kod') || ''
+  const listDate      = params.get('tarih') || ''
+
   const ids = raw.split(',').map(s => s.trim())
   const found = ids.map(id => {
     for (const p of PRODUCTS) {
@@ -720,6 +743,17 @@ function checkListeMode () {
   style.textContent = `body{margin:0;background:var(--bg);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}`
   document.head.appendChild(style)
 
+  const hasCustomer = customerName || customerPhone || listCode
+
+  const customerCard = hasCustomer ? `
+    <div style="margin:16px 20px 0;background:#fff;border:1px solid #e5e4e0;border-radius:12px;padding:16px 18px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:12px;">MÜŞTERİ BİLGİSİ</div>
+      ${customerName ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Ad Soyad</span><span style="font-size:13px;font-weight:600;color:#0d0d0d;">${esc(customerName)}</span></div>` : ''}
+      ${customerPhone ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Telefon</span><a href="tel:${esc(customerPhone)}" style="font-size:13px;font-weight:600;color:#0d0d0d;text-decoration:none;">${esc(customerPhone)}</a></div>` : ''}
+      ${listDate ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Tarih</span><span style="font-size:13px;color:#0d0d0d;">${esc(listDate)}</span></div>` : ''}
+      ${listCode ? `<div style="border-top:1px solid #e5e4e0;margin-top:10px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13px;color:#888;">Liste Kodu</span><span style="font-size:15px;font-weight:800;font-family:ui-monospace,monospace;letter-spacing:.1em;color:#0d0d0d;">${esc(listCode)}</span></div>` : ''}
+    </div>` : ''
+
   const root = document.createElement('div')
   root.style.cssText = 'max-width:600px;margin:0 auto;padding:0 0 60px;'
   root.innerHTML = `
@@ -729,7 +763,8 @@ function checkListeMode () {
         <a href="${window.location.pathname}" style="font-size:12px;color:var(--muted);border:1px solid var(--border);padding:5px 12px;border-radius:100px;">← Kataloğa Dön</a>
       </div>
     </div>
-    <div style="padding:28px 20px 16px;">
+    ${customerCard}
+    <div style="padding:${hasCustomer ? '16px' : '28px'} 20px 16px;">
       <h1 style="font-size:20px;font-weight:600;margin:0 0 4px;">Seçili Ürünler</h1>
       <p style="font-size:13px;color:#888;margin:0;">${found.length} ürün seçildi</p>
     </div>`
