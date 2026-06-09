@@ -73,6 +73,7 @@ ul{list-style:none;padding:0;margin:0;}
 .brand-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
 .group-name{font-weight:600;font-size:16px;letter-spacing:-.02em;}
 .group-price{font-size:13px;color:var(--muted);}
+.group-note{font-size:12px;font-weight:600;color:var(--fg);background:var(--bg);border-left:2.5px solid var(--border);padding:5px 10px;border-radius:0 4px 4px 0;margin:0 0 10px;display:block;}
 .group-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .group-btn{font-size:11px;font-weight:500;letter-spacing:.03em;padding:6px 12px;border:1px solid var(--border);border-radius:100px;transition:border-color .15s,background .15s,color .15s,transform .1s var(--ease-out);white-space:nowrap;}
 .group-btn:hover{border-color:var(--fg);background:var(--fg);color:#fff;}
@@ -393,6 +394,7 @@ async function fetchData () {
     brand: p.brand || '',
     name: p.name || p.code || 'Ürün',
     code: p.code || '',
+    note: p.note || '',
     price: p.price || '0',
     createdAt: p.created_at,
     variations: (p.product_variations || []).sort((a, b) => a.sort_order - b.sort_order)
@@ -477,6 +479,7 @@ function render () {
     h += `<button class="group-btn wa" data-a="wag" data-pid="${p.id}">WhatsApp</button>`
     h += `</div></div>`
 
+    if (p.note) h += `<p class="group-note">${esc(p.note)}</p>`
     h += `<div class="variants-grid">`
     p.variations.forEach((v, vi) => {
       const il = inList(p.id, v.id)
