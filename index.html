@@ -652,9 +652,11 @@ function sendWhatsApp (items) {
 function sendProductWhatsApp (pid) {
   const p = PRODUCTS.find(x => x.id === pid)
   if (!p) return
-  const firstVid = p.variations.find(v => v.status !== 'Gizli')?.id || p.variations[0]?.id
-  if (!firstVid) return
-  sendWhatsApp([pid + '::' + firstVid])
+  const items = p.variations
+    .filter(v => v.status !== 'Gizli')
+    .map(v => pid + '::' + v.id)
+  if (!items.length) return
+  sendWhatsApp(items)
 }
 
 function captureLeadAndSend (whatsappFn) {
