@@ -69,11 +69,14 @@ ul{list-style:none;padding:0;margin:0;}
 .product-group{margin-bottom:40px;}
 .product-group:last-child{margin-bottom:0;}
 .group-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
-.group-header-left{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;flex:1;min-width:0;}
-.brand-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
-.group-name{font-weight:600;font-size:16px;letter-spacing:-.02em;}
-.group-price{font-size:13px;color:var(--muted);}
-.group-note{font-size:12px;font-weight:600;color:var(--fg);background:var(--bg);border-left:2.5px solid var(--border);padding:5px 10px;border-radius:0 4px 4px 0;margin:0 0 10px;display:block;}
+.group-header-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.group-title-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.group-name{font-weight:700;font-size:24px;letter-spacing:-.02em;line-height:1.1;}
+.group-code{font-size:15px;font-weight:500;color:var(--muted);}
+.group-code::before{content:"-";margin-right:8px;}
+.group-price{font-size:22px;font-weight:700;color:var(--fg);line-height:1.15;}
+.group-brand{font-size:14px;font-weight:500;font-style:italic;color:var(--muted);}
+.group-note{font-size:13px;font-weight:600;color:var(--fg);background:var(--surface);border:1.5px solid #e3a075;padding:9px 14px;border-radius:12px;margin:2px 0 14px;display:block;}
 .group-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .group-btn{font-size:11px;font-weight:500;letter-spacing:.03em;padding:6px 12px;border:1px solid var(--border);border-radius:100px;transition:border-color .15s,background .15s,color .15s,transform .1s var(--ease-out);white-space:nowrap;}
 .group-btn:hover{border-color:var(--fg);background:var(--fg);color:#fff;}
@@ -83,6 +86,8 @@ ul{list-style:none;padding:0;margin:0;}
 @media(max-width:500px){
   .group-header-right{flex:0 0 100%;justify-content:flex-end;}
   .group-btn{font-size:10px;padding:5px 11px;}
+  .group-name{font-size:20px;}
+  .group-price{font-size:19px;}
 }
 
 /* GRID — 3:4 görseller */
@@ -471,9 +476,11 @@ function render () {
     h += `<div class="product-group" style="animation-delay:${stagger}ms">`
     h += `<div class="group-header">`
     h += `<div class="group-header-left">`
-    if (p.brand) h += `<span class="brand-tag">${esc(p.brand)}</span>`
-    h += `<h2 class="group-name">${esc(p.name)}</h2>`
+    h += `<div class="group-title-row"><h2 class="group-name">${esc(p.name)}</h2>`
+    if (p.code) h += `<span class="group-code">${esc(p.code)}</span>`
+    h += `</div>`
     if (priceStr) h += `<span class="group-price">${priceStr}</span>`
+    if (p.brand) h += `<span class="group-brand">Marka : ${esc(p.brand)}</span>`
     h += `</div><div class="group-header-right">`
     h += `<button class="group-btn" data-a="ta" data-pid="${p.id}">${allIn ? 'Listeden Çıkar' : 'Tümünü Listele'}</button>`
     h += `<button class="group-btn wa" data-a="wag" data-pid="${p.id}">WhatsApp</button>`
