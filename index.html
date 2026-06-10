@@ -316,6 +316,14 @@ const SB_URL = 'https://vuuebfijlhjivwlgztfz.supabase.co'
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dWViZmlqbGhqaXZ3bGd6dGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNTAxNjksImV4cCI6MjA5NTcyNjE2OX0.j9rvKDRS6OcQb6k2J9ycSJFcxydfH6aoytJGhACQ3uY'
 const SK  = 'catalog_list_v1'
 
+// ── EMAIL CONFIRM REDIRECT ────────────────────────────────────────────────────
+;(function () {
+  const h = new URLSearchParams(window.location.hash.slice(1))
+  if (h.get('type') === 'signup' || h.get('type') === 'email_change') {
+    window.location.replace('/confirm')
+  }
+})()
+
 // ── SLUG ─────────────────────────────────────────────────────────────────────
 const slug = window.location.pathname.split('/').filter(Boolean).pop() || ''
 
