@@ -437,9 +437,11 @@ function applyStoreUI () {
     document.getElementById('callBtn').href = `tel:+${STORE.whatsapp_phone}`
   }
   if (STORE.location_text) {
-    document.getElementById('mapBtn').href = `https://maps.google.com/?q=${encodeURIComponent(STORE.location_text)}`
+    const loc = STORE.location_text
+    const mapsHref = loc.startsWith('http') ? loc : `https://maps.google.com/?q=${encodeURIComponent(loc)}`
+    document.getElementById('mapBtn').href = mapsHref
     document.getElementById('footerLocation').style.display = 'flex'
-    document.getElementById('footerLocationText').textContent = STORE.location_text
+    document.getElementById('footerLocationText').textContent = loc.startsWith('http') ? 'Haritada Gör' : loc
   }
 }
 
