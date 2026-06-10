@@ -783,9 +783,7 @@ function checkListeMode () {
 
   const listDiv = document.createElement('div')
   listDiv.style.cssText = 'padding:0 20px;display:flex;flex-direction:column;gap:8px;'
-  let total = 0
   found.forEach(({ p, v }, i) => {
-    total += +p.price || 0
     const item = document.createElement('div')
     item.style.cssText = `background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px;animation:fadeUp .3s ${i*60}ms both;`
     item.innerHTML = `
@@ -802,11 +800,6 @@ function checkListeMode () {
   })
   root.appendChild(listDiv)
 
-  const footerDiv = document.createElement('div')
-  footerDiv.style.cssText = 'padding:20px 20px 0;'
-  footerDiv.innerHTML = `
-    ${total ? `<div style="background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:13px;color:var(--muted);">Toplam</span><span style="font-size:17px;font-weight:700;">${fmt(total)}</span></div>` : ''}`
-  root.appendChild(footerDiv)
   document.body.appendChild(root)
   return true
 }
