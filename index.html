@@ -4,952 +4,1003 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SanalKatalog — Dijital Showroom Platformu</title>
-  <meta name="description" content="Showroom'unuzu cebinize alın, siparişlerinizi WhatsApp'ta toplayın. Mağazanızdaki ürünleri saniyeler içinde dijital showroom'unuza taşıyın.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Showroom'unuzu cebinize alın, siparişlerinizi WhatsApp'ta toplayın.">
   <style>
+    /* Stack Sans Headline — Google Fonts CDN */
+    @font-face{font-family:'Stack Sans Headline';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/stacksansheadline/v1/1Ptyg9jZXvmMnkLnuURbaukKZJTyrDV38aevGw.woff2) format('woff2')}
+    @font-face{font-family:'Stack Sans Headline';font-style:normal;font-weight:700;font-display:swap;src:url(https://fonts.gstatic.com/s/stacksansheadline/v1/1PtFg9jZXvmMnkLnuURbaukKZJTyrDV326uH6mSinjBIwc6KJQFCqgUA3ZCX.woff2) format('woff2')}
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #000;
-      --surface: #111;
-      --surface-2: #171717;
-      --border: #262626;
-      --border-mid: #404040;
-      --text: #fff;
-      --text-muted: #a3a3a3;
-      --text-dim: #737373;
-      --accent: #22c55e;
-      --accent-dim: #22c55e22;
-      --accent-border: #22c55e55;
-      --font-head: 'Plus Jakarta Sans', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      --r-sm: 12px;
-      --r-md: 20px;
-      --r-lg: 32px;
-      --r-xl: 40px;
-      --r-pill: 100px;
+      --white:   #fff;
+      --black:   #000;
+      --d1:      #171717;
+      --d1a:     #171717b8;
+      --d2:      #262626;
+      --d3:      #404040;
+      --l1:      #f5f5f5;
+      --l2:      #e5e5e5;
+      --green:   #22c55e;
+      --green0:  #22c55e00;
+      --green1:  #22c55e1a;
+      --green2:  #22c55e3d;
+      --yellow:  #eab30a;
+      --gray:    #737373;
+      --muted:   #a3a3a3;
+      --dark:    #0d0d0d;
+      --darka:   #0d0d0db8;
+      --overlay: #ffffff1f;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif;
       font-size: 16px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
 
-    /* ─── NAV ─── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 0 40px;
-      height: 64px;
+    /* ── TYPOGRAPHY ── */
+    .display {
+      font-family: 'Stack Sans Headline', 'Inter', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px 0 0;
+      pointer-events: none;
+    }
+
+    .navbar-inner {
+      pointer-events: all;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border);
+      gap: 36px;
+      width: 100%; max-width: 1120px;
+      padding: 12px 12px 12px 24px;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--d2);
+      border-radius: 16px;
+      margin: 0 20px;
     }
 
     .nav-logo {
-      font-family: var(--font-head);
-      font-weight: 800; font-size: 20px;
-      color: var(--text); text-decoration: none;
-      letter-spacing: -0.5px;
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 18px;
+      color: var(--white); text-decoration: none;
+      white-space: nowrap;
     }
-    .nav-logo span { color: var(--accent); }
+    .nav-logo em { font-style: normal; color: var(--green); }
 
-    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      list-style: none; flex: 1; justify-content: center;
+    }
+
     .nav-links a {
-      color: var(--text-muted); text-decoration: none;
+      color: var(--muted); text-decoration: none;
       font-size: 14px; font-weight: 500;
-      transition: color 0.2s;
+      padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s;
     }
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover { color: var(--white); background: var(--d2); }
 
-    .btn-nav {
-      background: var(--accent); color: #000;
-      padding: 9px 20px; border-radius: var(--r-pill);
-      font-weight: 700; font-size: 14px; text-decoration: none;
-      transition: opacity 0.2s;
+    .nav-cta {
+      background: var(--green); color: var(--black);
+      padding: 10px 20px; border-radius: 100px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; white-space: nowrap;
+      transition: opacity .2s;
+      flex-shrink: 0;
     }
-    .btn-nav:hover { opacity: 0.8; }
+    .nav-cta:hover { opacity: .8; }
 
-    /* ─── BUTTONS ─── */
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--accent); color: #000;
-      padding: 14px 28px; border-radius: var(--r-pill);
-      font-weight: 700; font-size: 15px; text-decoration: none;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
-
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: var(--text);
-      padding: 14px 28px; border-radius: var(--r-pill);
-      font-weight: 600; font-size: 15px; text-decoration: none;
-      border: 1px solid var(--border-mid);
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .btn-outline:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-    /* ─── HERO ─── */
+    /* ── HERO ── */
     .hero {
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center;
-      padding: 140px 40px 100px;
+      padding: 160px 40px 0;
       position: relative; overflow: hidden;
     }
 
-    .hero-glow-bottom {
-      position: absolute; bottom: -80px; left: 50%;
-      transform: translateX(-50%);
-      width: 900px; height: 500px;
-      background: radial-gradient(50% 50% at 50% 100%, #22c55e35, transparent);
+    /* Grid dot background */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, #000 30%, transparent 80%);
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, #000 30%, transparent 80%);
       pointer-events: none;
     }
 
-    .hero-grid-bg {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    /* Green glow blur */
+    .hero-glow {
+      position: absolute;
+      top: 10%; left: 50%;
+      transform: translate(-50%, 0);
+      width: 900px; height: 600px;
+      background: radial-gradient(50% 50% at 50% 50%, var(--green2), var(--green0));
+      filter: blur(80px);
+      border-radius: 100%;
       pointer-events: none;
+      opacity: .5;
+      inset-inline: -398px;
     }
 
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      color: var(--accent);
-      padding: 6px 16px; border-radius: var(--r-pill);
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      margin-bottom: 36px;
       position: relative;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 40px;
     }
+
+    .hero-badge svg { flex-shrink: 0; }
 
     .hero h1 {
-      font-family: var(--font-head);
-      font-size: clamp(48px, 7.5vw, 96px);
-      font-weight: 800; line-height: 1.03;
-      letter-spacing: -3px;
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700;
+      font-size: clamp(56px, 9vw, 112px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
       max-width: 900px;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
       position: relative;
     }
 
-    .hero h1 .green { color: var(--accent); }
+    .hero h1 .accent { color: var(--green); }
 
-    .hero p {
-      color: var(--text-muted);
-      font-size: 18px; max-width: 520px;
-      line-height: 1.75; margin-bottom: 44px;
+    .hero-sub {
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 18px);
+      max-width: 480px;
+      line-height: 1.75;
+      margin-bottom: 48px;
       position: relative;
     }
 
-    .hero-buttons {
-      display: flex; gap: 12px;
-      justify-content: center; flex-wrap: wrap;
-      position: relative;
+    .hero-btns {
+      display: flex; gap: 12px; justify-content: center;
+      flex-wrap: wrap; position: relative;
     }
 
-    /* ─── MARQUEE ─── */
-    .marquee-wrap {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 18px 0; overflow: hidden;
+    .btn-green {
+      background: var(--green); color: var(--black);
+      padding: 14px 28px; border-radius: 100px;
+      font-weight: 700; font-size: 15px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-green:hover { opacity: .85; transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--d3);
+      color: var(--white);
+      padding: 14px 28px; border-radius: 100px;
+      font-weight: 600; font-size: 15px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: border-color .2s, transform .15s;
+    }
+    .btn-ghost:hover { border-color: var(--green); transform: translateY(-2px); }
+
+    /* ── HERO VISUAL CARD ── */
+    .hero-card-wrap {
+      width: 100%; max-width: 1440px; margin: 0 auto;
+      padding: 0 40px 0;
+      position: relative; z-index: 1;
     }
 
-    .marquee-track {
-      display: flex; gap: 40px;
-      animation: marquee 22s linear infinite;
-      white-space: nowrap; width: max-content;
+    .hero-card {
+      background: var(--darka);
+      border: 1px solid var(--overlay);
+      border-radius: 40px;
+      padding: 80px 80px 40px;
+      margin-top: 80px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 64px;
+      position: relative; overflow: hidden;
     }
 
-    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
-
-    .m-item {
-      font-family: var(--font-head);
-      font-size: 13px; font-weight: 700;
-      color: var(--border-mid);
-      letter-spacing: 1.5px; text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    .m-dot { color: var(--accent); font-size: 16px; }
-
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ─── LAYOUT ─── */
-    .container {
-      max-width: 1200px; margin: 0 auto;
-      padding: 100px 40px;
-    }
-
-    .section-badge {
-      display: inline-block;
-      color: var(--accent); font-size: 11px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: var(--font-head);
-      font-size: clamp(36px, 4.5vw, 56px);
-      font-weight: 800; letter-spacing: -1.5px;
-      line-height: 1.08; margin-bottom: 16px;
-    }
-
-    .section-desc {
-      color: var(--text-muted);
-      font-size: 17px; max-width: 560px; line-height: 1.75;
-    }
-
-    /* ─── STATS ROW ─── */
-    .stats-row {
-      display: flex;
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      margin-top: 64px;
-    }
-
-    .stat-item {
-      flex: 1; padding: 40px 32px; text-align: center;
-      border-right: 1px solid var(--border);
-    }
-    .stat-item:last-child { border-right: none; }
-
-    .stat-num {
-      font-family: var(--font-head);
-      font-size: 52px; font-weight: 800;
-      color: var(--accent); letter-spacing: -3px;
-      line-height: 1; margin-bottom: 8px;
-    }
-
-    .stat-lbl { color: var(--text-muted); font-size: 14px; }
-
-    /* ─── FEATURE GRID ─── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px; margin-top: 40px;
-    }
-
-    .f-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 32px;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-    .f-card:hover { border-color: var(--border-mid); transform: translateY(-3px); }
-
-    .f-icon {
-      width: 48px; height: 48px;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--r-sm);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; margin-bottom: 20px;
-    }
-
-    .f-card h3 {
-      font-family: var(--font-head);
-      font-size: 17px; font-weight: 700;
-      margin-bottom: 8px; letter-spacing: -0.2px;
-    }
-
-    .f-card p { color: var(--text-muted); font-size: 14px; line-height: 1.65; }
-
-    /* ─── SPLIT SECTIONS ─── */
-    .split {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: center;
-      max-width: 1200px; margin: 0 auto;
-      padding: 80px 40px;
-    }
-
-    .split.rev .split-vis { order: 1; }
-    .split.rev .split-txt { order: 2; }
-
-    .split-vis {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-xl);
-      aspect-ratio: 1;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; position: relative;
-    }
-
-    .vis-glow {
-      position: absolute; bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 200px; height: 120px;
-      background: radial-gradient(50% 50% at 50% 100%, #22c55e30, transparent);
+    .hero-card::before {
+      content: '';
+      position: absolute; bottom: -180px; left: 0; right: 0; height: 600px;
+      background: radial-gradient(50% 34% at 50% 64.3%, rgba(0,0,0,0.08) 37%, transparent 100%);
       pointer-events: none;
     }
 
-    .vis-inner {
-      width: 80%; background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 24px;
-      display: flex; flex-direction: column; gap: 12px;
-      position: relative;
+    /* ── MARQUEE ── */
+    .marquee-section {
+      border-top: 1px solid var(--d2);
+      border-bottom: 1px solid var(--d2);
+      overflow: hidden; padding: 20px 0;
     }
 
-    .mock-pill {
-      background: #22c55e18; border: 1px solid var(--accent-border);
-      border-radius: 10px; padding: 12px 16px;
+    .marquee-track {
+      display: flex; gap: 48px; align-items: center;
+      animation: scroll 25s linear infinite;
+      width: max-content;
+    }
+    .marquee-section:hover .marquee-track { animation-play-state: paused; }
+
+    .m-item {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--d3); letter-spacing: 1.5px;
+      text-transform: uppercase; white-space: nowrap; flex-shrink: 0;
+    }
+    .m-star { color: var(--green); font-size: 14px; flex-shrink: 0; }
+
+    @keyframes scroll { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+    /* ── SECTIONS ── */
+    .page-wrap {
+      max-width: 1440px; margin: 0 auto;
+      padding: 0 40px;
     }
 
-    .mock-pill-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
-    .mock-pill-val { font-size: 14px; font-weight: 600; }
-    .mock-pill-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .section-card {
+      background: var(--darka);
+      border: 1px solid var(--overlay);
+      border-radius: 40px;
+      padding: 80px;
+      margin-bottom: 16px;
+      position: relative; overflow: hidden;
+    }
 
-    .mock-bar { height: 8px; background: var(--border); border-radius: 10px; }
-    .mock-bar.a { background: var(--accent); width: 65%; }
-    .mock-bar.b { width: 45%; }
-    .mock-bar.c { width: 80%; }
+    .label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--green); margin-bottom: 16px;
+      display: block;
+    }
 
-    .split-txt .feat-list {
+    .title {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.0; letter-spacing: -0.035em;
+      margin-bottom: 16px;
+    }
+
+    .title .accent { color: var(--green); }
+
+    .desc {
+      color: var(--muted); font-size: 17px;
+      max-width: 560px; line-height: 1.75;
+    }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--d2); border-radius: 24px;
+      overflow: hidden; margin-top: 56px;
+    }
+
+    .stat {
+      padding: 40px 32px; text-align: center;
+      border-right: 1px solid var(--d2);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-n {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 56px;
+      line-height: 1; letter-spacing: -0.04em;
+      color: var(--green); margin-bottom: 8px;
+    }
+    .stat-l { color: var(--muted); font-size: 14px; }
+
+    /* ── FEATURE CARDS ── */
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-top: 40px;
+    }
+
+    .feat-card {
+      background: var(--d1);
+      border: 1px solid var(--d2);
+      border-radius: 24px;
+      padding: 28px;
+      transition: border-color .25s, transform .25s;
+    }
+    .feat-card:hover { border-color: var(--d3); transform: translateY(-4px); }
+
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 16px;
+    }
+
+    .feat-card h3 {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 16px; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .feat-card p { color: var(--muted); font-size: 13px; line-height: 1.65; }
+
+    /* ── SPLIT LAYOUT ── */
+    .split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .split.flip > :first-child { order: 2; }
+    .split.flip > :last-child  { order: 1; }
+
+    .split-vis {
+      background: var(--d1);
+      border: 1px solid var(--d2);
+      border-radius: 32px;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    .split-vis-glow {
+      position: absolute; inset: 0;
+      background: radial-gradient(50% 50% at 50% 100%, var(--green2), transparent);
+      pointer-events: none;
+    }
+
+    .split-vis-inner {
+      width: 75%;
+      background: var(--dark);
+      border: 1px solid var(--d2);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative; z-index: 1;
+    }
+
+    .mock-card {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px; padding: 14px 16px;
+    }
+    .mock-card-tag { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+    .mock-card-val { font-size: 14px; font-weight: 600; }
+    .mock-card-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+    .mock-row { display: flex; gap: 8px; }
+    .mock-num-box {
+      flex: 1; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 10px; padding: 10px; text-align: center;
+    }
+    .mock-num-box b {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-size: 24px; font-weight: 700; color: var(--green);
+      letter-spacing: -0.03em; display: block;
+    }
+    .mock-num-box small { font-size: 11px; color: var(--muted); }
+
+    .mock-num-box.dim { background: var(--d1); border-color: var(--d2); }
+    .mock-num-box.dim b { color: var(--white); }
+
+    .bar { height: 7px; background: var(--d2); border-radius: 10px; }
+    .bar.green { background: var(--green); width: 65%; }
+    .bar.med   { width: 80%; }
+    .bar.sm    { width: 40%; }
+
+    .check-list {
       list-style: none; margin-top: 28px;
-      display: flex; flex-direction: column; gap: 14px;
+      display: flex; flex-direction: column; gap: 12px;
     }
-
-    .split-txt .feat-list li {
+    .check-list li {
       display: flex; align-items: center; gap: 12px;
-      color: var(--text-muted); font-size: 15px;
+      color: var(--muted); font-size: 15px;
     }
-
-    .check {
+    .chk {
       width: 22px; height: 22px; flex-shrink: 0;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
       border-radius: 50%;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2322c55e'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
       background-size: 14px; background-position: center; background-repeat: no-repeat;
     }
 
-    /* ─── TESTIMONIALS ─── */
+    /* Bar chart mockup */
+    .bar-chart {
+      display: flex; gap: 4px; align-items: flex-end; height: 52px;
+    }
+    .bar-chart span {
+      flex: 1; border-radius: 4px;
+      background: var(--green); opacity: .3;
+    }
+    .bar-chart span.hi { opacity: 1; }
+    .bar-chart span.md { opacity: .65; }
+
+    .chart-days {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--gray);
+    }
+
+    /* ── TESTIMONIALS ── */
     .testi-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 14px; margin-top: 56px;
-    }
-
-    .testi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 28px;
-      transition: border-color 0.25s;
-    }
-    .testi-card:hover { border-color: var(--border-mid); }
-
-    .testi-stars { color: var(--accent); font-size: 14px; margin-bottom: 12px; }
-
-    .testi-title {
-      font-family: var(--font-head);
-      font-size: 16px; font-weight: 700; margin-bottom: 10px;
-    }
-
-    .testi-body {
-      color: var(--text-muted); font-size: 14px;
-      line-height: 1.65; margin-bottom: 20px;
-    }
-
-    .testi-author { display: flex; align-items: center; gap: 12px; }
-
-    .t-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 14px; color: var(--accent);
-      flex-shrink: 0;
-    }
-
-    .t-name { font-size: 13px; font-weight: 600; }
-    .t-role { font-size: 12px; color: var(--text-dim); }
-
-    /* ─── PROCESS ─── */
-    .process-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr);
       gap: 12px; margin-top: 56px;
     }
 
-    .p-step { text-align: center; padding: 20px 12px; }
+    .testi-card {
+      background: var(--d1);
+      border: 1px solid var(--d2);
+      border-radius: 24px;
+      padding: 24px;
+      transition: border-color .25s;
+    }
+    .testi-card:hover { border-color: var(--d3); }
+
+    .testi-stars { color: var(--green); font-size: 13px; margin-bottom: 12px; }
+
+    .testi-title {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 15px; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .testi-body {
+      color: var(--muted); font-size: 13px;
+      line-height: 1.65; margin-bottom: 20px;
+    }
+
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 14px; color: var(--green);
+    }
+
+    .author-name { font-size: 13px; font-weight: 600; }
+    .author-role { font-size: 11px; color: var(--gray); }
+
+    /* ── PROCESS ── */
+    .process-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 8px; margin-top: 48px;
+    }
+
+    .p-step { text-align: center; padding: 16px 8px; }
 
     .p-num {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-head); font-weight: 800; font-size: 20px;
-      color: var(--accent); margin: 0 auto 16px;
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 18px; color: var(--green);
+      margin: 0 auto 14px;
     }
 
     .p-step h3 {
-      font-family: var(--font-head); font-size: 14px; font-weight: 700;
-      margin-bottom: 6px;
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 13px; margin-bottom: 4px;
     }
-    .p-step p { font-size: 12px; color: var(--text-dim); line-height: 1.55; }
+    .p-step p { font-size: 12px; color: var(--gray); line-height: 1.5; }
 
-    /* ─── FAQ ─── */
-    .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 10px; }
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; margin-top: 48px; }
 
     .faq-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      overflow: hidden;
+      background: var(--d1); border: 1px solid var(--d2);
+      border-radius: 16px; overflow: hidden;
     }
 
     .faq-q {
-      padding: 20px 24px;
+      padding: 18px 24px;
       display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; font-weight: 600; font-size: 15px; gap: 16px;
-      user-select: none;
-      transition: color 0.2s;
+      cursor: pointer; font-weight: 600; font-size: 14px; gap: 16px;
+      transition: color .2s;
     }
-    .faq-q:hover { color: var(--accent); }
+    .faq-q:hover { color: var(--green); }
 
-    .faq-plus {
-      width: 26px; height: 26px; border-radius: 50%;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
+    .faq-ico {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
       display: flex; align-items: center; justify-content: center;
-      color: var(--accent); font-size: 18px; flex-shrink: 0;
-      transition: transform 0.25s;
+      color: var(--green); font-size: 16px;
+      transition: transform .25s;
     }
-    .faq-item.open .faq-plus { transform: rotate(45deg); }
+    .faq-item.open .faq-ico { transform: rotate(45deg); }
 
-    .faq-a {
+    .faq-body {
       max-height: 0; overflow: hidden;
-      transition: max-height 0.3s ease, padding 0.3s ease;
       padding: 0 24px;
-      color: var(--text-muted); font-size: 14px; line-height: 1.75;
+      color: var(--muted); font-size: 14px; line-height: 1.75;
+      transition: max-height .3s ease, padding .3s ease;
     }
-    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+    .faq-item.open .faq-body { max-height: 160px; padding: 0 24px 20px; }
 
-    /* ─── FINAL CTA ─── */
-    .final-cta {
-      max-width: 1200px; margin: 0 auto;
-      padding: 40px 40px 100px;
-    }
-
-    .cta-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 48px;
-      padding: 80px 60px;
-      text-align: center;
-      position: relative; overflow: hidden;
-    }
-
-    .cta-glow {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px; height: 350px;
-      background: radial-gradient(50% 50% at 50% 50%, #22c55e1a, transparent);
+    /* ── BOTTOM FLOAT NAV (CTA) ── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      width: 100%; max-width: 1120px;
+      padding: 12px 12px 28px;
+      background: radial-gradient(50% 100% at 50% 100%, rgba(0,0,0,0.9) 0%, transparent 100%);
+      display: flex; align-items: center; justify-content: center;
       pointer-events: none;
     }
 
-    .cta-card h2 {
-      font-family: var(--font-head);
-      font-size: clamp(40px, 5vw, 72px);
-      font-weight: 800; letter-spacing: -2px;
-      line-height: 1.05; margin-bottom: 20px;
-      position: relative;
-    }
-    .cta-card h2 .green { color: var(--accent); }
-
-    .cta-card p {
-      color: var(--text-muted); font-size: 17px;
-      margin-bottom: 40px; position: relative;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--border);
-      max-width: 1200px; margin: 0 auto;
-      padding: 32px 40px;
+    .bottom-nav-inner {
+      pointer-events: all;
       display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--d2);
+      border-radius: 100px;
+      padding: 8px 8px 8px 20px;
+      width: 100%;
+    }
+
+    .bottom-nav-text {
+      font-size: 14px; font-weight: 500; color: var(--muted);
+      flex: 1;
+    }
+    .bottom-nav-text strong { color: var(--white); }
+
+    .bottom-nav-btns { display: flex; gap: 8px; }
+
+    .btn-pill {
+      background: var(--green); color: var(--black);
+      padding: 10px 20px; border-radius: 100px;
+      font-size: 13px; font-weight: 700;
+      text-decoration: none; white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .btn-pill:hover { opacity: .8; }
+
+    .btn-pill-ghost {
+      background: var(--d2); color: var(--white);
+      padding: 10px 20px; border-radius: 100px;
+      font-size: 13px; font-weight: 600;
+      text-decoration: none; white-space: nowrap;
+      transition: background .2s;
+    }
+    .btn-pill-ghost:hover { background: var(--d3); }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--d2); margin: 0; }
+
+    /* ── FOOTER ── */
+    .footer {
+      max-width: 1440px; margin: 0 auto; padding: 32px 40px 100px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--d2);
     }
 
     .footer-logo {
-      font-family: var(--font-head);
-      font-weight: 800; font-size: 18px; color: var(--text);
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 700; font-size: 18px; color: var(--white);
     }
-    .footer-logo span { color: var(--accent); }
+    .footer-logo em { font-style: normal; color: var(--green); }
 
-    .footer-copy { color: var(--text-dim); font-size: 13px; }
+    .footer-copy { color: var(--gray); font-size: 13px; }
 
     .footer-links { display: flex; gap: 24px; list-style: none; }
     .footer-links a {
-      color: var(--text-dim); text-decoration: none;
-      font-size: 13px; transition: color 0.2s;
+      color: var(--gray); text-decoration: none; font-size: 13px;
+      transition: color .2s;
     }
-    .footer-links a:hover { color: var(--text); }
+    .footer-links a:hover { color: var(--white); }
 
-    /* ─── SCROLL REVEAL ─── */
+    /* ── SCROLL REVEAL ── */
     .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1),
-                  transform 0.7s cubic-bezier(0.23,1,0.32,1);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .65s cubic-bezier(0.23,1,0.32,1), transform .65s cubic-bezier(0.23,1,0.32,1);
     }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal.vis { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 960px) {
-      nav { padding: 0 20px; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) {
+      .navbar-inner { margin: 0 12px; gap: 16px; }
       .nav-links { display: none; }
-      .hero { padding: 120px 20px 80px; }
-      .container { padding: 70px 20px; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .split { grid-template-columns: 1fr; gap: 40px; padding: 60px 20px; }
-      .split.rev .split-vis, .split.rev .split-txt { order: unset; }
+      .hero { padding: 120px 24px 0; }
+      .hero-card-wrap { padding: 0 16px; }
+      .hero-card { padding: 48px 28px 28px; border-radius: 28px; gap: 40px; }
+      .page-wrap { padding: 0 16px; }
+      .section-card { padding: 48px 28px; border-radius: 28px; }
+      .split { grid-template-columns: 1fr; gap: 32px; }
+      .split.flip > :first-child, .split.flip > :last-child { order: unset; }
       .split-vis { aspect-ratio: 4/3; }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
       .testi-grid { grid-template-columns: 1fr; }
       .process-grid { grid-template-columns: repeat(3, 1fr); }
-      .stats-row { flex-wrap: wrap; }
-      .stat-item { flex: 1 1 50%; border-bottom: 1px solid var(--border); }
-      .final-cta { padding: 40px 20px 80px; }
-      .cta-card { padding: 60px 28px; border-radius: 32px; }
-      footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 20px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat { border-bottom: 1px solid var(--d2); }
+      .bottom-nav { padding: 12px 16px 20px; }
+      .footer { flex-direction: column; gap: 20px; text-align: center; padding-bottom: 80px; }
     }
 
     @media (max-width: 600px) {
-      .hero h1 { font-size: 44px; letter-spacing: -1.5px; }
-      .features-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 52px; }
+      .feat-grid { grid-template-columns: 1fr; }
       .process-grid { grid-template-columns: 1fr 1fr; }
-      .stats-row { flex-direction: column; }
-      .stat-item { border-right: none; }
-      .hero-buttons { flex-direction: column; align-items: center; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .bottom-nav-text { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="/" class="nav-logo">Sanal<span>Katalog</span></a>
-    <ul class="nav-links">
-      <li><a href="#features">Özellikler</a></li>
-      <li><a href="#nasil">Nasıl Çalışır</a></li>
-      <li><a href="#yorumlar">Yorumlar</a></li>
-      <li><a href="#sss">SSS</a></li>
-    </ul>
-    <a href="/catalog.html" class="btn-nav">Kataloğa Git →</a>
+  <!-- ── NAV ── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="nav-logo">Sanal<em>Katalog</em></a>
+      <ul class="nav-links">
+        <li><a href="#features">Özellikler</a></li>
+        <li><a href="#nasil">Nasıl Çalışır</a></li>
+        <li><a href="#yorumlar">Yorumlar</a></li>
+        <li><a href="#sss">SSS</a></li>
+      </ul>
+      <a href="/catalog.html" class="nav-cta">Kataloğa Git →</a>
+    </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- ── HERO ── -->
   <section class="hero">
-    <div class="hero-grid-bg"></div>
-    <div class="hero-glow-bottom"></div>
+    <div class="hero-glow"></div>
 
     <div class="hero-badge">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.31 4.49C7.41 4.85 7.52 5.2 7.65 5.54C8.22 7.06 8.94 7.78 10.47 8.35C10.78 8.47 11.13 8.58 11.51 8.69C12.16 8.87 12.16 9.8 11.51 9.98C11.16 10.07 10.81 10.19 10.47 10.31C8.94 10.88 8.22 11.61 7.65 13.13C7.52 13.47 7.41 13.82 7.31 14.18C7.13 14.83 6.2 14.83 6.02 14.18C5.93 13.82 5.81 13.47 5.69 13.13C5.12 11.61 4.39 10.88 2.87 10.31C2.52 10.18 2.17 10.07 1.81 9.97C1.15 9.79 1.15 8.87 1.81 8.69C2.17 8.59 2.52 8.48 2.87 8.35C4.39 7.78 5.12 7.06 5.69 5.54C5.81 5.2 5.93 4.85 6.02 4.49C6.2 3.84 7.13 3.84 7.31 4.49Z" fill="currentColor"/>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M11.975 1.821C11.794 1.171 10.871 1.171 10.69 1.821C10.586 2.197 10.481 2.488 10.367 2.724C10.139 3.197 9.862 3.474 9.388 3.702C9.1 3.84 8.793 3.933 8.479 4.02A.75.75 0 0 0 8.479 5.306C8.793 5.393 9.1 5.486 9.388 5.624C9.862 5.852 10.139 6.129 10.367 6.601C10.481 6.836 10.586 7.127 10.69 7.502A.75.75 0 0 0 11.975 7.502C12.079 7.127 12.184 6.836 12.298 6.601C12.526 6.129 12.803 5.852 13.278 5.624C13.514 5.512 13.805 5.408 14.18 5.311A.75.75 0 0 0 14.18 4.027C13.805 3.93 13.514 3.826 13.278 3.714C12.803 3.486 12.526 3.209 12.298 2.737C12.184 2.501 12.079 2.197 11.975 1.821Z" fill="currentColor"/>
+        <path d="M7.31 4.491C7.13 3.836 6.202 3.836 6.023 4.491C5.927 4.847 5.815 5.197 5.688 5.541C5.117 7.061 4.392 7.783 2.871 10.311C2.167 10.074 2.167 8.871 2.871 8.693C3.521 8.481 4.392 8.354 5.688 5.541C5.815 5.197 5.927 4.847 6.023 4.491Z" fill="transparent"/>
+        <path d="M7.31 4.491C7.13 3.836 6.202 3.836 6.023 4.491C5.81 4.197 5.688 5.197 5.688 5.541C5.117 7.061 4.392 7.783 2.871 10.311C2.521 10.184 2.167 10.074 1.808 9.971C1.152 9.791 1.152 8.871 1.808 8.693C2.167 8.591 2.521 8.481 2.871 8.354C4.392 7.783 5.117 7.061 5.688 5.541C5.815 5.197 5.927 4.847 6.023 4.491C6.202 3.836 7.13 3.836 7.31 4.491Z" fill="currentColor"/>
       </svg>
       Dijital Showroom Platformu
     </div>
 
     <h1>
-      Showroom'unuz Cebinizde,<br>
-      Satışınız <span class="green">WhatsApp'ta.</span>
+      Showroom'unuz<br>
+      Cebinizde, Satışınız<br>
+      <span class="accent">WhatsApp'ta.</span>
     </h1>
 
-    <p>
+    <p class="hero-sub">
       Mağazanızdaki ürünleri saniyeler içinde dijital showroom'unuza taşıyın.
-      Müşterileriniz incelesin, seçsin ve siparişini tek tıkla size göndersin.
+      Müşterileriniz incelesin, tek tıkla sipariş göndersin.
     </p>
 
-    <div class="hero-buttons">
-      <a href="/catalog.html" class="btn-primary">Ücretsiz Dene →</a>
-      <a href="#features" class="btn-outline">Nasıl Çalışır</a>
+    <div class="hero-btns">
+      <a href="/catalog.html" class="btn-green">Ücretsiz Dene →</a>
+      <a href="#features" class="btn-ghost">Nasıl Çalışır</a>
+    </div>
+
+    <!-- Hero Visual Card -->
+    <div class="hero-card-wrap">
+      <div class="hero-card">
+        <!-- Marquee inside hero card -->
+        <div class="marquee-section" style="width:100%;border-radius:16px;border:1px solid var(--d2);overflow:hidden;border-left:none;border-right:none;border-top:none;">
+          <div class="marquee-track">
+            <span class="m-item">WhatsApp Siparişi</span><span class="m-star">✦</span>
+            <span class="m-item">Sıfır Komisyon</span><span class="m-star">✦</span>
+            <span class="m-item">60s Kurulum</span><span class="m-star">✦</span>
+            <span class="m-item">Dijital Showroom</span><span class="m-star">✦</span>
+            <span class="m-item">Sınırsız Ürün</span><span class="m-star">✦</span>
+            <span class="m-item">Anlık Güncelleme</span><span class="m-star">✦</span>
+            <span class="m-item">Tek Link</span><span class="m-star">✦</span>
+            <span class="m-item">WhatsApp Siparişi</span><span class="m-star">✦</span>
+            <span class="m-item">Sıfır Komisyon</span><span class="m-star">✦</span>
+            <span class="m-item">60s Kurulum</span><span class="m-star">✦</span>
+            <span class="m-item">Dijital Showroom</span><span class="m-star">✦</span>
+            <span class="m-item">Sınırsız Ürün</span><span class="m-star">✦</span>
+            <span class="m-item">Anlık Güncelleme</span><span class="m-star">✦</span>
+            <span class="m-item">Tek Link</span><span class="m-star">✦</span>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid reveal" style="width:100%;">
+          <div class="stat">
+            <div class="stat-n">60s</div>
+            <div class="stat-l">Kurulum süresi</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">%0</div>
+            <div class="stat-l">Komisyon</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">∞</div>
+            <div class="stat-l">Ürün sınırı</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">1</div>
+            <div class="stat-l">Link, tüm katalog</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <span class="m-item">WhatsApp Entegrasyonu</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Dijital Showroom</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Sıfır Komisyon</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Mobil Yönetim</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Anlık Güncelleme</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">60 Saniye Kurulum</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Sınırsız Ürün</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Tek Link</span>
-      <span class="m-dot">✦</span>
-      <!-- duplicate for loop -->
-      <span class="m-item">WhatsApp Entegrasyonu</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Dijital Showroom</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Sıfır Komisyon</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Mobil Yönetim</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Anlık Güncelleme</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">60 Saniye Kurulum</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Sınırsız Ürün</span>
-      <span class="m-dot">✦</span>
-      <span class="m-item">Tek Link</span>
-      <span class="m-dot">✦</span>
-    </div>
-  </div>
+  <!-- ── FEATURES ── -->
+  <div style="height:80px;" id="features"></div>
+  <div class="page-wrap">
 
-  <!-- FEATURES -->
-  <section id="features">
-    <div class="container" style="padding-top:100px;padding-bottom:80px;">
-      <div class="section-badge">Özellikler</div>
-      <h2 class="section-title">Karmaşaya Değil,<br>Satışa Odaklanın.</h2>
-      <p class="section-desc">Ürünlerinizi dijitale taşımak artık dakikalar alıyor. Tek link, sıfır teknik bilgi, sıfır komisyon.</p>
+    <div class="section-card">
+      <span class="label">Özellikler</span>
+      <h2 class="title">Karmaşaya Değil,<br><span class="accent">Satışa Odaklanın.</span></h2>
+      <p class="desc">Ürünlerinizi dijitale taşımak artık dakikalar alıyor. Sıfır teknik bilgi, sıfır komisyon.</p>
 
-      <div class="stats-row reveal">
-        <div class="stat-item">
-          <div class="stat-num">60s</div>
-          <div class="stat-lbl">Kurulum süresi</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">%0</div>
-          <div class="stat-lbl">Komisyon</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">∞</div>
-          <div class="stat-lbl">Ürün sınırı</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">1</div>
-          <div class="stat-lbl">Link, tüm katalog</div>
-        </div>
-      </div>
-
-      <div class="features-grid">
-        <div class="f-card reveal">
-          <div class="f-icon">🔗</div>
+      <div class="feat-grid">
+        <div class="feat-card reveal reveal-d1">
+          <div class="feat-icon">🔗</div>
           <h3>Tek Link, Tüm Katalog</h3>
           <p>Müşterileriniz ürünlerinize baksın, kategoriler içinde gezsin, kararını verip size ulaşsın.</p>
         </div>
-        <div class="f-card reveal">
-          <div class="f-icon">⚡</div>
+        <div class="feat-card reveal reveal-d2">
+          <div class="feat-icon">⚡</div>
           <h3>Hızlı Kurulum</h3>
-          <p>Teknik işlerle uğraşmayın. 60 saniyede ürünlerinizi ekleyin, mağazanızı dijitale taşıyın.</p>
+          <p>60 saniyede ürünlerinizi ekleyin. Teknik işlerle uğraşmayın, mağazanızı dijitale taşıyın.</p>
         </div>
-        <div class="f-card reveal">
-          <div class="f-icon">🔄</div>
+        <div class="feat-card reveal reveal-d3">
+          <div class="feat-icon">🔄</div>
           <h3>Anlık Güncelleme</h3>
-          <p>Stok ve fiyat değişikliklerini anında güncelleyin, herkes güncel kataloğu görsün.</p>
+          <p>Stok ve fiyat değişikliklerini anında güncelleyin. Herkes güncel kataloğu görsün.</p>
         </div>
-        <div class="f-card reveal">
-          <div class="f-icon">💬</div>
+        <div class="feat-card reveal reveal-d1">
+          <div class="feat-icon">💬</div>
           <h3>WhatsApp Siparişi</h3>
-          <p>Müşteriniz seçsin, listesini oluştursun ve tek tıkla doğrudan sizin WhatsApp hattınıza göndersin.</p>
+          <p>Müşteriniz seçsin, listesini oluştursun ve tek tıkla WhatsApp hattınıza göndersin.</p>
         </div>
-        <div class="f-card reveal">
-          <div class="f-icon">📊</div>
+        <div class="feat-card reveal reveal-d2">
+          <div class="feat-icon">📊</div>
           <h3>Ürün Analitiği</h3>
-          <p>Hangi ürünün kaç kez incelendiğini görün. Müşterinizin ne istediğini tam olarak bilin.</p>
+          <p>Hangi ürünün kaç kez incelendiğini görün. Müşterinizin ne istediğini tam bilin.</p>
         </div>
-        <div class="f-card reveal">
-          <div class="f-icon">🛡️</div>
+        <div class="feat-card reveal reveal-d3">
+          <div class="feat-icon">🛡️</div>
           <h3>Güvenli Altyapı</h3>
-          <p>Verileriniz güvende. Teknik sorunlarla uğraşmayın, biz yönetiriz siz satışa odaklanın.</p>
+          <p>Verileriniz güvende. Teknik sorunlarla uğraşmayın, siz satışa odaklanın.</p>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- SPLIT 1: WhatsApp -->
-  <div class="split" id="nasil">
-    <div class="split-txt">
-      <div class="section-badge">Sipariş Akışı</div>
-      <h2 class="section-title">Müşteriniz Seçsin,<br>Sipariş Anında<br><span style="color:var(--accent)">WhatsApp'ta.</span></h2>
-      <p class="section-desc">Karmaşık sepet süreçleri veya üyelik formları yok. Müşteriniz listesini hazırlar, tek tıkla size ulaşır.</p>
-      <ul class="feat-list">
-        <li><span class="check"></span>Müşteri uygulaması indirmez, tek link yeterli</li>
-        <li><span class="check"></span>Siparişler doğrudan WhatsApp hattınıza gelir</li>
-        <li><span class="check"></span>Arada hiçbir komisyoncu veya yabancı platform yok</li>
-        <li><span class="check"></span>Ödeme ve teslimat tamamen sizin kontrolünüzde</li>
-      </ul>
-    </div>
-    <div class="split-vis reveal">
-      <div class="vis-glow"></div>
-      <div class="vis-inner">
-        <div class="mock-pill">
-          <div class="mock-pill-label">🎉 Yeni Sipariş</div>
-          <div class="mock-pill-val">Ahmet B. — 3 ürün seçti</div>
-          <div class="mock-pill-sub">WhatsApp üzerinden iletişime geç →</div>
+    <!-- SPLIT 1: WhatsApp -->
+    <div class="section-card" id="nasil">
+      <div class="split">
+        <div>
+          <span class="label">Sipariş Akışı</span>
+          <h2 class="title">Müşteriniz Seçsin,<br>Sipariş Anında<br><span class="accent">WhatsApp'ta.</span></h2>
+          <p class="desc">Karmaşık sepet formları yok. Müşteriniz listesini hazırlar, tek tıkla size ulaşır.</p>
+          <ul class="check-list">
+            <li><span class="chk"></span>Müşteri uygulama indirmez, tek link yeterli</li>
+            <li><span class="chk"></span>Siparişler doğrudan WhatsApp hattınıza gelir</li>
+            <li><span class="chk"></span>Arada hiçbir komisyoncu veya platform yok</li>
+            <li><span class="chk"></span>Ödeme ve teslimat tamamen size ait</li>
+          </ul>
         </div>
-        <div class="mock-bar a"></div>
-        <div class="mock-bar c"></div>
-        <div class="mock-bar b"></div>
-        <div style="display:flex;gap:8px;">
-          <div style="flex:1;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:20px;font-weight:800;color:var(--accent);font-family:var(--font-head);">12</div>
-            <div style="font-size:11px;color:var(--text-dim);">Bugün</div>
-          </div>
-          <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:20px;font-weight:800;font-family:var(--font-head);">84</div>
-            <div style="font-size:11px;color:var(--text-dim);">Bu hafta</div>
+        <div class="split-vis reveal">
+          <div class="split-vis-glow"></div>
+          <div class="split-vis-inner">
+            <div class="mock-card">
+              <div class="mock-card-tag">🎉 Yeni Sipariş</div>
+              <div class="mock-card-val">Ahmet B. — 3 ürün seçti</div>
+              <div class="mock-card-sub">WhatsApp'tan iletişime geç →</div>
+            </div>
+            <div class="mock-row">
+              <div class="mock-num-box">
+                <b>12</b>
+                <small>Bugün</small>
+              </div>
+              <div class="mock-num-box dim">
+                <b>84</b>
+                <small>Bu hafta</small>
+              </div>
+            </div>
+            <div class="bar green"></div>
+            <div class="bar med"></div>
+            <div class="bar sm"></div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- SPLIT 2: Analytics (reversed) -->
-  <div class="split rev">
-    <div class="split-vis reveal">
-      <div class="vis-glow"></div>
-      <div class="vis-inner">
-        <div style="text-align:center;padding:8px 0 4px;">
-          <div style="font-size:44px;font-weight:800;color:var(--accent);font-family:var(--font-head);letter-spacing:-2px;line-height:1;">847</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Bu hafta görüntülenme</div>
+    <!-- SPLIT 2: Analytics -->
+    <div class="section-card">
+      <div class="split flip">
+        <div>
+          <span class="label">Analitik</span>
+          <h2 class="title">Hangi Ürün Kaç<br>Defa <span class="accent">İncelendi?</span></h2>
+          <p class="desc">Müşterilerinizin hangi ürünlere tıkladığını anlık olarak takip edin. Neyin satacağını önceden bilin.</p>
+          <ul class="check-list">
+            <li><span class="chk"></span>Ürün bazlı görüntülenme istatistikleri</li>
+            <li><span class="chk"></span>En çok ilgi göreni vitrine öne alın</li>
+            <li><span class="chk"></span>Vitrin ziyaret sayısını anlık takip edin</li>
+            <li><span class="chk"></span>Müşteri ilgisini veriyle anlayın</li>
+          </ul>
         </div>
-        <div style="display:flex;gap:4px;margin-top:4px;align-items:flex-end;height:48px;">
-          <div style="flex:1;background:#22c55e40;border-radius:4px;height:40%;"></div>
-          <div style="flex:1;background:#22c55e60;border-radius:4px;height:60%;"></div>
-          <div style="flex:1;background:#22c55e80;border-radius:4px;height:80%;"></div>
-          <div style="flex:1;background:var(--accent);border-radius:4px;height:100%;"></div>
-          <div style="flex:1;background:#22c55e80;border-radius:4px;height:70%;"></div>
-          <div style="flex:1;background:#22c55e60;border-radius:4px;height:55%;"></div>
-          <div style="flex:1;background:#22c55e40;border-radius:4px;height:35%;"></div>
-        </div>
-        <div class="mock-bar c"></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
-          <span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span>
+        <div class="split-vis reveal">
+          <div class="split-vis-glow"></div>
+          <div class="split-vis-inner">
+            <div style="text-align:center;padding:4px 0;">
+              <div style="font-family:'Stack Sans Headline',sans-serif;font-weight:700;font-size:48px;color:var(--green);letter-spacing:-0.04em;line-height:1;">847</div>
+              <div style="font-size:11px;color:var(--gray);margin-top:4px;">Bu hafta görüntülenme</div>
+            </div>
+            <div class="bar-chart">
+              <span style="height:40%;"></span>
+              <span class="md" style="height:60%;"></span>
+              <span class="md" style="height:75%;"></span>
+              <span class="hi" style="height:100%;"></span>
+              <span class="md" style="height:80%;"></span>
+              <span class="md" style="height:55%;"></span>
+              <span style="height:35%;"></span>
+            </div>
+            <div class="chart-days">
+              <span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span>
+            </div>
+            <div class="bar green"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="split-txt">
-      <div class="section-badge">Analitik</div>
-      <h2 class="section-title">Hangi Ürün Kaç<br>Defa <span style="color:var(--accent)">İncelendi?</span></h2>
-      <p class="section-desc">Müşterilerinizin hangi ürünlere tıkladığını anlık olarak takip edin. Neyin satacağını önceden bilin.</p>
-      <ul class="feat-list">
-        <li><span class="check"></span>Ürün bazlı görüntülenme istatistikleri</li>
-        <li><span class="check"></span>En çok ilgi gören ürünleri vitrine öne alın</li>
-        <li><span class="check"></span>Vitrin ziyaret sayısını anlık takip edin</li>
-        <li><span class="check"></span>Müşteri ilgisini veri ile anlayın</li>
-      </ul>
-    </div>
-  </div>
 
-  <!-- SPLIT 3: Security -->
-  <div class="split">
-    <div class="split-txt">
-      <div class="section-badge">Güvenlik & Kontrol</div>
-      <h2 class="section-title">Showroom'unuzu<br>Yönetmek Artık<br><span style="color:var(--accent)">Çok Kolay.</span></h2>
-      <p class="section-desc">Karmaşık panellerle uğraşmayın. Dijital showroom'unuzdaki her ürünü cep telefonunuzdan anlık olarak kontrol edin.</p>
-      <ul class="feat-list">
-        <li><span class="check"></span>Tek tıkla ürün gizle veya göster</li>
-        <li><span class="check"></span>Hızlı ürün silme ve düzenleme</li>
-        <li><span class="check"></span>İstediğin zaman kataloğa ekle</li>
-        <li><span class="check"></span>Fiyat değişikliği anında yansır</li>
-      </ul>
-    </div>
-    <div class="split-vis reveal">
-      <div class="vis-glow"></div>
-      <div class="vis-inner">
-        <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;font-weight:600;letter-spacing:0.5px;">ÜRÜN YÖNETİMİ</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:10px;padding:10px 14px;">
-            <span style="font-size:13px;font-weight:600;">Kazak — S/M/L</span>
-            <span style="font-size:11px;color:var(--accent);font-weight:700;">● Görünür</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;">
-            <span style="font-size:13px;font-weight:600;">Gömlek — Beyaz</span>
-            <span style="font-size:11px;color:var(--text-dim);font-weight:600;">○ Gizli</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:10px;padding:10px 14px;">
-            <span style="font-size:13px;font-weight:600;">Pantolon — 32</span>
-            <span style="font-size:11px;color:var(--accent);font-weight:700;">● Görünür</span>
+    <!-- SPLIT 3: Management -->
+    <div class="section-card">
+      <div class="split">
+        <div>
+          <span class="label">Yönetim</span>
+          <h2 class="title">Showroom'unuzu<br>Yönetmek Artık<br><span class="accent">Çok Kolay.</span></h2>
+          <p class="desc">Karmaşık panellerle uğraşmayın. Her ürünü cep telefonunuzdan anlık kontrol edin.</p>
+          <ul class="check-list">
+            <li><span class="chk"></span>Tek tıkla ürün gizle veya göster</li>
+            <li><span class="chk"></span>Hızlı ürün silme ve düzenleme</li>
+            <li><span class="chk"></span>Fiyat değişikliği anında yansır</li>
+            <li><span class="chk"></span>İstediğin zaman yeni ürün ekle</li>
+          </ul>
+        </div>
+        <div class="split-vis reveal">
+          <div class="split-vis-glow"></div>
+          <div class="split-vis-inner">
+            <div style="font-size:11px;color:var(--gray);font-weight:600;letter-spacing:0.5px;margin-bottom:4px;">ÜRÜN YÖNETİMİ</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:10px 14px;">
+                <span style="font-size:13px;font-weight:600;">Kazak — S/M/L</span>
+                <span style="font-size:11px;color:var(--green);font-weight:700;">● Görünür</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--dark);border:1px solid var(--d2);border-radius:10px;padding:10px 14px;">
+                <span style="font-size:13px;font-weight:600;">Gömlek — Beyaz</span>
+                <span style="font-size:11px;color:var(--gray);font-weight:600;">○ Gizli</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:10px 14px;">
+                <span style="font-size:13px;font-weight:600;">Pantolon — 32</span>
+                <span style="font-size:11px;color:var(--green);font-weight:700;">● Görünür</span>
+              </div>
+            </div>
+            <div class="bar med"></div>
           </div>
         </div>
-        <div class="mock-bar b" style="margin-top:4px;"></div>
       </div>
     </div>
-  </div>
 
-  <!-- TESTIMONIALS -->
-  <section id="yorumlar">
-    <div class="container" style="padding-top:80px;padding-bottom:80px;">
-      <div style="text-align:center;">
-        <div class="section-badge">Yorumlar</div>
-        <h2 class="section-title" style="margin-top:8px;">Esnaflar Ne Diyor?</h2>
+    <!-- TESTIMONIALS -->
+    <div class="section-card" id="yorumlar">
+      <div style="text-align:center;max-width:560px;margin:0 auto;">
+        <span class="label">Yorumlar</span>
+        <h2 class="title">Esnaflar Ne Diyor?</h2>
       </div>
       <div class="testi-grid">
-        <div class="testi-card reveal">
+        <div class="testi-card reveal reveal-d1">
           <div class="testi-stars">★★★★★</div>
           <div class="testi-title">Saatlerimi Kurtardı</div>
-          <div class="testi-body">Eskiden her müşteriye tek tek WhatsApp'tan fotoğraf gönderiyordum. Şimdi linki paylaşıyorum, müşterim kendisi geziyor. Çok daha profesyonel görünüyoruz.</div>
+          <div class="testi-body">Eskiden her müşteriye tek tek WhatsApp'tan fotoğraf gönderiyordum. Şimdi linki paylaşıyorum, müşterim kendi geziyor. Çok daha profesyonel görünüyoruz.</div>
           <div class="testi-author">
-            <div class="t-avatar">M</div>
+            <div class="avatar">M</div>
             <div>
-              <div class="t-name">Mehmet Y.</div>
-              <div class="t-role">Tekstil Esnafı</div>
+              <div class="author-name">Mehmet Y.</div>
+              <div class="author-role">Tekstil Esnafı</div>
             </div>
           </div>
         </div>
-        <div class="testi-card reveal">
+        <div class="testi-card reveal reveal-d2">
           <div class="testi-stars">★★★★★</div>
           <div class="testi-title">5 Dakikada Kurdum</div>
-          <div class="testi-body">Teknik bilgim hiç yoktu ama kurulumu kolayca yaptım. Müşterilerim linki gördükten sonra profesyonel bir mağaza gibi göründüğümüzü söylediler.</div>
+          <div class="testi-body">Teknik bilgim hiç yoktu ama kurulumu kolayca yaptım. Müşterilerim linki görünce profesyonel bir mağaza gibi göründüğümüzü söylediler.</div>
           <div class="testi-author">
-            <div class="t-avatar">A</div>
+            <div class="avatar">A</div>
             <div>
-              <div class="t-name">Ayşe K.</div>
-              <div class="t-role">Hediyelik Eşya</div>
+              <div class="author-name">Ayşe K.</div>
+              <div class="author-role">Hediyelik Eşya</div>
             </div>
           </div>
         </div>
-        <div class="testi-card reveal">
+        <div class="testi-card reveal reveal-d3">
           <div class="testi-stars">★★★★★</div>
           <div class="testi-title">Komisyon Yok!</div>
-          <div class="testi-body">Diğer platformlarda her satıştan komisyon kesiyordu. Burada ödeme tamamen benim kontrolümde. Müşterim direkt WhatsApp'tan yazıyor, süper.</div>
+          <div class="testi-body">Diğer platformlarda her satıştan komisyon kesiyordu. Burada ödeme tamamen benim kontrolümde. Müşterim direkt WhatsApp'tan yazıyor.</div>
           <div class="testi-author">
-            <div class="t-avatar">F</div>
+            <div class="avatar">F</div>
             <div>
-              <div class="t-name">Fatih D.</div>
-              <div class="t-role">Elektronik</div>
+              <div class="author-name">Fatih D.</div>
+              <div class="author-role">Elektronik</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- PROCESS -->
-  <section id="process">
-    <div class="container" style="padding-top:40px;padding-bottom:100px;text-align:center;">
-      <div class="section-badge">Nasıl Çalışır</div>
-      <h2 class="section-title" style="margin-top:8px;">5 Adımda Dijital<br>Showroom'unuz Hazır.</h2>
+    <!-- PROCESS -->
+    <div class="section-card" id="nasil-calisir" style="text-align:center;">
+      <span class="label">Nasıl Çalışır</span>
+      <h2 class="title">5 Adımda Dijital<br><span class="accent">Showroom'unuz Hazır.</span></h2>
       <div class="process-grid">
-        <div class="p-step reveal">
-          <div class="p-num">1</div>
-          <h3>Kayıt Olun</h3>
-          <p>E-posta ile dakikalar içinde hesap oluşturun. Kredi kartı gerekmez.</p>
+        <div class="p-step reveal"><div class="p-num">1</div><h3>Kayıt Olun</h3><p>E-posta ile dakikalar içinde hesap oluşturun.</p></div>
+        <div class="p-step reveal reveal-d1"><div class="p-num">2</div><h3>Ürün Ekleyin</h3><p>Fotoğraf çekin, ürün bilgilerini girin.</p></div>
+        <div class="p-step reveal reveal-d2"><div class="p-num">3</div><h3>Kategorize Edin</h3><p>Ürünleri mantıklı kategorilerde organize edin.</p></div>
+        <div class="p-step reveal reveal-d3"><div class="p-num">4</div><h3>Paylaşın</h3><p>Linki WhatsApp veya Instagram'da paylaşın.</p></div>
+        <div class="p-step reveal"><div class="p-num">5</div><h3>Sipariş Alın</h3><p>Müşteri listesini hazırlar, size gönderir.</p></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section-card" id="sss">
+      <div style="max-width:680px;margin:0 auto;">
+        <div style="text-align:center;">
+          <span class="label">SSS</span>
+          <h2 class="title">Aklınıza Takılanlar</h2>
         </div>
-        <div class="p-step reveal">
-          <div class="p-num">2</div>
-          <h3>Ürün Ekleyin</h3>
-          <p>Fotoğraf çekin veya galeriden yükleyin, ürün bilgilerini girin.</p>
-        </div>
-        <div class="p-step reveal">
-          <div class="p-num">3</div>
-          <h3>Kategorize Edin</h3>
-          <p>Ürünleri mantıklı kategorilerde organize edin, müşteri deneyimi artsın.</p>
-        </div>
-        <div class="p-step reveal">
-          <div class="p-num">4</div>
-          <h3>Paylaşın</h3>
-          <p>Linki WhatsApp, Instagram veya SMS ile müşterilerinize gönderin.</p>
-        </div>
-        <div class="p-step reveal">
-          <div class="p-num">5</div>
-          <h3>Siparişi Alın</h3>
-          <p>Müşteri listesini hazırlar, doğrudan WhatsApp hattınıza gönderir.</p>
+        <div class="faq-list" style="margin-top:48px;">
+          <div class="faq-item">
+            <div class="faq-q">Teknik bilgi gerekiyor mu?<div class="faq-ico">+</div></div>
+            <div class="faq-body">Hayır. SanalKatalog tamamen cep telefonunuzdan yönetebileceğiniz şekilde tasarlandı. Ürün eklemek veya fiyat güncellemek normal bir uygulamayı kullanmak kadar kolaydır.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Satışlarımdan komisyon alıyor musunuz?<div class="faq-ico">+</div></div>
+            <div class="faq-body">Kesinlikle hayır. Müşterileriniz doğrudan sizin WhatsApp hattınıza ulaşır. Ödeme, teslimat ve pazarlık tamamen sizin kontrolünüzdedir.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Müşterilerimin uygulama indirmesi gerekiyor mu?<div class="faq-ico">+</div></div>
+            <div class="faq-body">Hayır. Müşterileriniz paylaştığınız linke tıklayarak showroom'unuza tarayıcı üzerinden erişir, hiçbir kurulum gerekmez.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Ürün sınırı var mı?<div class="faq-ico">+</div></div>
+            <div class="faq-body">Hayır, herhangi bir ürün sınırı yok. Yüzlerce ürünü sınırsız şekilde sergileyebilirsiniz.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Fiyat güncellediğimde müşteriler anında görür mü?<div class="faq-ico">+</div></div>
+            <div class="faq-body">Evet. Telefonunuzdan fiyat değiştirdiğinizde, müşterileriniz sayfayı yenilediği an en güncel bilgileri görür.</div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- FAQ -->
-  <section id="sss" style="border-top:1px solid var(--border);">
-    <div class="container" style="max-width:800px;padding-top:80px;padding-bottom:80px;">
-      <div style="text-align:center;margin-bottom:8px;">
-        <div class="section-badge">SSS</div>
-        <h2 class="section-title" style="margin-top:8px;">Aklınıza Takılanlar</h2>
-      </div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-q">
-            Kullanmak için teknik bilgi gerekiyor mu?
-            <div class="faq-plus">+</div>
-          </div>
-          <div class="faq-a">Hayır. SanalKatalog tamamen cep telefonunuzdan yönetebileceğiniz şekilde tasarlandı. Ürün eklemek, fiyat güncellemek veya vitrini düzenlemek normal bir uygulamayı kullanmak kadar kolaydır.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">
-            Satışlarımdan komisyon alıyor musunuz?
-            <div class="faq-plus">+</div>
-          </div>
-          <div class="faq-a">Kesinlikle hayır. SanalKatalog bir e-ticaret aracısı değildir. Müşterileriniz doğrudan sizin WhatsApp hattınıza ulaşır. Ödeme, teslimat ve pazarlık süreçleri tamamen sizin kontrolünüzdedir.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">
-            Müşterilerimin uygulama indirmesi gerekiyor mu?
-            <div class="faq-plus">+</div>
-          </div>
-          <div class="faq-a">Hayır, gerekmiyor. Müşterileriniz paylaştığınız tek bir linke tıklayarak showroom'unuza herhangi bir kurulum yapmadan tarayıcı üzerinden erişebilir.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">
-            Kataloğuma ekleyebileceğim ürün sınırı var mı?
-            <div class="faq-plus">+</div>
-          </div>
-          <div class="faq-a">Hayır, herhangi bir ürün sınırı yok. Yüzlerce ürünü, istediğiniz kadar görsel ve açıklama ekleyerek tamamen sınırsız bir şekilde dijital showroom'unuzda sergileyebilirsiniz.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">
-            Fiyat güncellediğimde müşteriler anında görür mü?
-            <div class="faq-plus">+</div>
-          </div>
-          <div class="faq-a">Evet, her şey anlık çalışır. Telefonunuzdan bir ürünün fiyatını değiştirdiğinizde, müşterileriniz sayfayı yenilediği an en güncel bilgileri görür. Ekstra bir web güncellemesine gerek kalmaz.</div>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div><!-- /page-wrap -->
 
-  <!-- FINAL CTA -->
-  <div class="final-cta">
-    <div class="cta-card">
-      <div class="cta-glow"></div>
-      <div class="section-badge" style="position:relative;">Hemen Başlayın</div>
-      <h2>
-        Rakipleriniz Hâlâ<br>
-        WhatsApp'tan Fotoğraf<br>
-        <span class="green">Gönderiyor.</span>
-      </h2>
-      <p>Birkaç dakikada kurulum, ömür boyu profesyonel görünüm.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;">
-        <a href="/catalog.html" class="btn-primary">Ücretsiz Başla →</a>
-        <a href="#sss" class="btn-outline">Sorularım Var</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">Sanal<span>Katalog</span></div>
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-logo">Sanal<em>Katalog</em></div>
     <p class="footer-copy">© 2026 SanalKatalog. Tüm hakları saklıdır.</p>
     <ul class="footer-links">
       <li><a href="#">Gizlilik</a></li>
@@ -958,41 +1009,36 @@
     </ul>
   </footer>
 
+  <!-- ── BOTTOM FLOATING NAV ── -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <p class="bottom-nav-text">
+        <strong>Rakipleriniz hâlâ WhatsApp'tan fotoğraf gönderiyor.</strong>
+        Dijital showroom'unuzu 60 saniyede kurun.
+      </p>
+      <div class="bottom-nav-btns">
+        <a href="#sss" class="btn-pill-ghost">Sorularım Var</a>
+        <a href="/catalog.html" class="btn-pill">Ücretsiz Başla →</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     // FAQ accordion
     document.querySelectorAll('.faq-q').forEach(q => {
       q.addEventListener('click', () => {
         const item = q.closest('.faq-item');
-        const isOpen = item.classList.contains('open');
+        const open = item.classList.contains('open');
         document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        if (!isOpen) item.classList.add('open');
+        if (!open) item.classList.add('open');
       });
     });
 
     // Scroll reveal
-    const revealObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          revealObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-    // Smooth nav active
-    const sections = document.querySelectorAll('section[id], div[id]');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    window.addEventListener('scroll', () => {
-      let cur = '';
-      sections.forEach(s => {
-        if (window.scrollY >= s.offsetTop - 100) cur = s.id;
-      });
-      navLinks.forEach(a => {
-        a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--text)' : '';
-      });
-    }, { passive: true });
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   </script>
 
 </body>
