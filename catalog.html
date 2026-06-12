@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Katalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+<style>
+:root{
+  --bg:#f2f2f2;--surface:#fff;--fg:#0d0d0d;--muted:#666;--border:#e0e0e0;
+  --gutter:20px;--container:1320px;--radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+  --z-header:50;--z-panel:80;--z-island:70;--z-toast:90;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);--ease-spring:cubic-bezier(0.16,1,0.3,1);--ease-drawer:cubic-bezier(0.32,0.72,0,1);
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;cursor:pointer;border:0;background:none;padding:0;color:inherit;}
+p,h1,h2,h3{margin:0;}
+ul{list-style:none;padding:0;margin:0;}
+.container{max-width:var(--container);margin-inline:auto;padding-inline:var(--gutter);}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:var(--z-header);background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .2s;}
+.header.scrolled{box-shadow:0 1px 24px rgba(0,0,0,.06);}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
+.header-actions{display:flex;align-items:center;gap:2px;}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:var(--radius-sm);color:var(--muted);transition:color .15s,background .15s,transform .1s var(--ease-out);}
+.icon-btn:hover{color:var(--fg);background:#e8e8e8;}
+.icon-btn:active{transform:scale(0.9);}
+.icon-btn svg{width:18px;height:18px;stroke-width:1.6;}
+
+/* HERO */
+.hero{padding:64px 0 56px;background:var(--fg);}
+.hero h1{font-size:clamp(40px,8vw,80px);font-weight:700;letter-spacing:-.03em;line-height:.95;margin-bottom:20px;color:var(--surface);text-wrap:balance;}
+.hero p{font-size:15px;color:rgba(255,255,255,.58);max-width:52ch;line-height:1.65;}
+
+/* FILTER BAR */
+.filter-bar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:calc(var(--z-header) - 1);}
+.filter-inner{display:flex;align-items:center;gap:10px;height:50px;overflow:hidden;}
+.filter-select-wrap{position:relative;flex-shrink:0;}
+.filter-select-wrap select{font-family:inherit;font-size:12px;font-weight:500;padding:6px 24px 6px 0;border:0;background:transparent;color:var(--fg);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aaa' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center;cursor:pointer;letter-spacing:.02em;text-transform:uppercase;}
+.filter-select-wrap select:focus{outline:none;}
+.filter-sep{width:1px;height:16px;background:var(--border);flex-shrink:0;}
+.filter-spacer{flex:1;}
+.count-label{font-size:12px;color:var(--muted);letter-spacing:.02em;flex-shrink:0;}
+.search-wrap{display:flex;align-items:center;margin-left:auto;position:relative;}
+.search-input{font-family:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--border);border-radius:100px;background:var(--bg);color:var(--fg);outline:none;width:180px;transition:border-color .15s,box-shadow .15s;}
+.search-input:focus{border-color:var(--fg);box-shadow:0 0 0 3px rgba(13,13,13,.07);}
+.search-input::placeholder{color:var(--muted);}
+@media(max-width:640px){
+  .filter-inner{height:auto;padding-block:10px;flex-wrap:wrap;gap:8px;}
+  .filter-spacer{display:none;}
+  .search-wrap{margin-left:0;order:-1;width:100%;}
+  .search-input{width:100%;font-size:16px;}
+  .filter-select-wrap select{font-size:13px;}
+}
+
+/* CATALOG */
+.catalog{padding-block:28px;padding-bottom:120px;}
+.product-group{margin-bottom:40px;}
+.product-group:last-child{margin-bottom:0;}
+.group-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.group-header-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.group-title-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.group-name{font-weight:700;font-size:24px;letter-spacing:-.02em;line-height:1.1;}
+.group-code{font-size:15px;font-weight:500;color:var(--muted);}
+.group-code::before{content:"-";margin-right:8px;}
+.group-price{font-size:22px;font-weight:700;color:var(--fg);line-height:1.15;}
+.group-brand{font-size:14px;font-weight:500;font-style:italic;color:var(--muted);}
+.group-note{font-size:13px;font-weight:600;color:var(--fg);background:var(--surface);border:1.5px solid #e3a075;padding:9px 14px;border-radius:12px;margin:2px 0 14px;display:block;}
+.group-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.group-btn{font-size:11px;font-weight:500;letter-spacing:.03em;padding:6px 12px;border:1px solid var(--border);border-radius:100px;transition:border-color .15s,background .15s,color .15s,transform .1s var(--ease-out);white-space:nowrap;}
+.group-btn:hover{border-color:var(--fg);background:var(--fg);color:#fff;}
+.group-btn:active{transform:scale(0.95);}
+.group-btn.wa{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.06);}
+.group-btn.wa:hover{background:#25d366;color:#fff;}
+@media(max-width:500px){
+  .group-header-right{flex-direction:column;align-items:flex-end;gap:6px;}
+  .group-btn{font-size:10px;padding:5px 11px;}
+  .group-name{font-size:20px;}
+  .group-price{font-size:19px;}
+}
+
+/* GRID — 3:4 görseller */
+.variants-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media(max-width:960px){.variants-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){.variants-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
+
+.variant-card{transition:transform .18s var(--ease-out);}
+.variant-img{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;background:#e8e8e8;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);border:1px solid var(--border);transition:border-color .18s var(--ease-out),box-shadow .18s var(--ease-out);}
+.variant-card.in-list .variant-img{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg);}
+.variant-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s var(--ease-out);}
+@media(hover:hover) and (pointer:fine){
+  .variant-card:hover{transform:translateY(-4px);}
+  .variant-card:hover .variant-img{box-shadow:0 12px 28px rgba(0,0,0,.1);}
+  .variant-card:hover .variant-img img{transform:scale(1.07);}
+}
+.img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.img-placeholder svg{width:40%;height:40%;opacity:.2;}
+.variant-badge{position:absolute;top:8px;left:8px;z-index:2;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;}
+.badge-yeni{background:#0d0d0d;color:#fff;}
+.badge-indirim{background:#c0392b;color:#fff;}
+.badge-populer{background:rgba(0,0,0,.07);color:#444;}
+
+/* LIST TOGGLE */
+.list-toggle{position:absolute;top:5px;right:5px;z-index:3;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;border:1.5px solid rgba(0,0,0,.1);transition:background .2s var(--ease-out),border-color .2s var(--ease-out),transform .15s var(--ease-out);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+@media(hover:hover) and (pointer:fine){.list-toggle:hover{transform:scale(1.1);}}
+.list-toggle:active{transform:scale(0.9);}
+.list-toggle.in-list{background:var(--fg);border-color:var(--fg);}
+.lt-icon{position:relative;width:12px;height:12px;}
+.lt-h,.lt-v{position:absolute;background:var(--fg);border-radius:2px;transition:opacity .18s var(--ease-out),transform .22s var(--ease-out),background .18s;}
+.lt-h{width:8px;height:1.5px;top:50%;left:50%;transform:translate(-50%,-50%);}
+.lt-v{width:1.5px;height:8px;top:50%;left:50%;transform:translate(-50%,-50%);}
+.lt-check{position:absolute;inset:0;opacity:0;transform:scale(.7) rotate(-15deg);transition:opacity .2s var(--ease-out),transform .25s var(--ease-out);}
+.lt-check svg{width:12px;height:12px;stroke:#fff;stroke-width:2.5;}
+.list-toggle.in-list .lt-h,.list-toggle.in-list .lt-v{opacity:0;transform:translate(-50%,-50%) scale(0);}
+.list-toggle.in-list .lt-check{opacity:1;transform:scale(1) rotate(0deg);}
+@keyframes pop{0%{transform:scale(1);}35%{transform:scale(1.18);}100%{transform:scale(1);}}
+.list-toggle.popping{animation:pop .35s var(--ease-spring);}
+
+/* VARIANT INFO */
+.variant-info{padding:9px 2px 0;display:flex;flex-direction:column;gap:2px;background:transparent;}
+.variant-name{font-size:13px;font-weight:500;color:var(--fg);}
+.variant-price{font-size:13px;font-weight:600;}
+.variant-code{font-size:10px;color:var(--muted);font-family:ui-monospace,monospace;}
+
+/* ISLAND */
+.island-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);z-index:var(--z-island);opacity:0;pointer-events:none;transition:opacity .35s var(--ease-out),transform .4s var(--ease-spring);}
+.island-wrap.visible{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.island{display:inline-flex;align-items:center;gap:8px;background:var(--fg);padding:5px;border-radius:100px;box-shadow:0 8px 32px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.15);}
+.island-left{display:flex;align-items:center;gap:8px;padding:2px 12px 2px 8px;border-right:1px solid rgba(255,255,255,.2);flex-shrink:0;}
+.island-badge{width:26px;height:26px;background:#fff;color:var(--fg);border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;}
+.island-badge.bump{animation:badge-bump .3s var(--ease-spring);}
+@keyframes badge-bump{0%{transform:scale(1);}50%{transform:scale(1.35);}100%{transform:scale(1);}}
+.island-list-btn{font-size:13px;font-weight:500;color:rgba(255,255,255,.8);white-space:nowrap;cursor:pointer;transition:color .15s,transform .1s var(--ease-out);}
+.island-list-btn:hover{color:#fff;}
+.island-list-btn:active{transform:scale(0.97);}
+.island-wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#fff;color:var(--fg);padding:8px 16px;border-radius:100px;font-size:12px;font-weight:600;white-space:nowrap;transform:translateZ(0);transition:opacity .15s,transform .1s var(--ease-out);}
+.island-wa-btn:hover{opacity:.85;}
+.island-wa-btn:active{transform:scale(0.95);opacity:.9;}
+.island-wa-btn svg{width:14px;height:14px;flex-shrink:0;}
+
+/* PANEL */
+.panel-overlay{position:fixed;inset:0;z-index:calc(var(--z-panel) - 1);background:rgba(0,0,0,0);pointer-events:none;transition:background .3s;}
+.panel-overlay.open{background:rgba(0,0,0,.35);pointer-events:auto;}
+.panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);z-index:var(--z-panel);width:min(520px,100vw);max-height:72vh;background:#fff;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;flex-direction:column;box-shadow:0 -4px 48px rgba(0,0,0,.16);transition:transform .38s var(--ease-drawer);}
+.panel.open{transform:translateX(-50%) translateY(0);}
+.panel-handle{width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:12px auto 0;flex-shrink:0;}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.panel-title{font-size:15px;font-weight:600;letter-spacing:-.01em;}
+.panel-close{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--bg);transition:background .15s,transform .1s var(--ease-out);}
+.panel-close:hover{background:#dcdcdc;}
+.panel-close:active{transform:scale(0.9);}
+.panel-close svg{width:14px;height:14px;stroke-width:2;}
+.panel-body{overflow-y:auto;flex:1;padding:12px 20px;}
+.panel-empty{text-align:center;padding:48px 0;color:var(--muted);font-size:13px;}
+.panel-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);animation:panel-in .28s var(--ease-out) both;}
+.panel-item:last-child{border-bottom:0;}
+@keyframes panel-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes group-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.product-group{animation:group-in .32s var(--ease-out) both;}
+.empty-state{animation:group-in .3s var(--ease-out);}
+.panel-item-thumb{width:44px;height:58px;border-radius:var(--radius-sm);background:var(--bg);overflow:hidden;flex-shrink:0;}
+.panel-item-thumb img{width:44px;height:58px;object-fit:cover;}
+.panel-item-info{flex:1;min-width:0;}
+.panel-item-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.panel-item-sub{font-size:11px;color:var(--muted);}
+.panel-item-price{font-size:13px;font-weight:600;flex-shrink:0;}
+.panel-item-remove{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--muted);transition:color .15s,background .15s,transform .1s var(--ease-out);flex-shrink:0;}
+.panel-item-remove:hover{color:#c0392b;background:#fdf0ef;}
+.panel-item-remove:active{transform:scale(0.88);}
+.panel-item-remove svg{width:14px;height:14px;stroke-width:2;}
+.panel-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.panel-clear-btn{flex:1;padding:13px 16px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--muted);transition:border-color .15s,color .15s,transform .1s var(--ease-out);}
+.panel-clear-btn:hover{border-color:var(--fg);color:var(--fg);}
+.panel-clear-btn:active{transform:scale(0.98);}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-12px);z-index:var(--z-toast);background:var(--fg);color:#fff;padding:9px 18px;border-radius:100px;font-size:12px;font-weight:500;pointer-events:none;opacity:0;transition:opacity .25s var(--ease-out),transform .3s var(--ease-spring);white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* LOADING / EMPTY */
+.skeleton{background:linear-gradient(90deg,#ebebeb 25%,#dfdede 50%,#ebebeb 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skeleton-card{border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);}
+.skeleton-img{aspect-ratio:3/4;width:100%;}
+.skeleton-text{height:12px;margin:10px 12px 4px;border-radius:4px;}
+.skeleton-text.short{width:60%;height:10px;margin-bottom:12px;}
+.empty-state{text-align:center;padding:80px 24px;color:var(--muted);}
+.empty-state p{font-size:13px;margin-top:6px;}
+.error-state{text-align:center;padding:60px 24px;}
+.error-state h2{font-size:18px;font-weight:600;margin-bottom:8px;}
+.error-state p{color:var(--muted);font-size:14px;}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:28px 0;font-size:12px;color:var(--muted);}
+.footer-inner{display:flex;flex-direction:column;gap:6px;}
+.footer-row{display:flex;align-items:center;gap:6px;}
+.footer-row svg{width:12px;height:12px;flex-shrink:0;}
+.footer-attrib{font-size:11px;color:var(--muted);margin-top:4px;}
+
+.skip-link{position:absolute;top:-100%;left:0;padding:8px 16px;background:var(--fg);color:var(--surface);font-size:13px;font-weight:600;border-radius:0 0 var(--radius-sm) 0;z-index:200;text-decoration:none;}
+.skip-link:focus{top:0;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+
+<a href="#productContainer" class="skip-link">Ürünlere geç</a>
+<header class="header" id="header">
+  <div class="container header-inner">
+    <div class="brand">
+      <span class="brand-name" id="brandName">Yükleniyor…</span>
+    </div>
+    <div class="header-actions">
+      <a class="icon-btn" id="mapBtn" href="#" target="_blank" title="Konum">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </a>
+      <a class="icon-btn" id="callBtn" href="#" title="Ara">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </a>
+      <a class="icon-btn" id="waHeaderBtn" href="#" target="_blank" title="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1 id="heroStoreName">Yükleniyor…</h1>
+    <p>Koleksiyona göz atın, beğendiğiniz renk ve modelleri listeleyin; WhatsApp'tan tek mesajla sipariş verin.</p>
+  </div>
+</section>
+
+<div class="filter-bar">
+  <div class="container filter-inner">
+    <div class="filter-select-wrap">
+      <select id="filterBrand" aria-label="Markaya göre filtrele"><option value="all">Tüm Markalar</option></select>
+    </div>
+    <span class="filter-sep"></span>
+    <div class="filter-select-wrap">
+      <select id="sortBy" aria-label="Sıralama ölçütü">
+        <option value="newest">Yeniden Eskiye</option>
+        <option value="price-asc">Fiyat Artan</option>
+        <option value="price-desc">Fiyat Azalan</option>
+        <option value="name">Ad (A-Z)</option>
+      </select>
+    </div>
+    <span class="filter-spacer"></span>
+    <span class="count-label" id="countLabel">—</span>
+    <div class="search-wrap">
+      <input class="search-input" id="searchInput" type="search" placeholder="Ara…" aria-label="Ürün ara" autocomplete="off" spellcheck="false"/>
+    </div>
+  </div>
+</div>
+
+<main class="catalog">
+  <div class="container" id="productContainer">
+    <div id="skeletonGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-row" id="footerLocation" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span id="footerLocationText"></span>
+    </div>
+    <div class="footer-attrib">Bu dijital showroom <strong>SanalKatalog</strong> ile oluşturulmuştur.</div>
+  </div>
+</footer>
+
+<!-- ISLAND -->
+<div class="island-wrap" id="islandWrap">
+  <div class="island">
+    <div class="island-left">
+      <div class="island-badge" id="islandBadge">0</div>
+      <button class="island-list-btn" id="islandListBtn">Listem</button>
+    </div>
+    <button class="island-wa-btn" id="islandWaBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.89.523 3.66 1.435 5.18L2.047 22l4.932-1.365A9.954 9.954 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.95 7.95 0 0 1-4.07-1.116l-.292-.174-3.035.841.82-2.965-.19-.304A7.96 7.96 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8Zm4.406-5.884c-.241-.12-1.427-.703-1.648-.784-.22-.08-.38-.12-.54.12-.16.24-.621.784-.762.944-.14.16-.281.18-.521.06-.241-.12-1.017-.375-1.937-1.195-.716-.638-1.2-1.426-1.34-1.666-.14-.24-.015-.37.105-.489.108-.107.24-.28.361-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.303-.74-1.784-.194-.467-.392-.403-.54-.41l-.46-.008a.884.884 0 0 0-.64.3c-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.617.573.248 1.02.395 1.368.506.574.183 1.097.157 1.51.095.46-.068 1.418-.58 1.618-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+      WhatsApp'tan Sor
+    </button>
+  </div>
+</div>
+
+<div class="panel-overlay" id="panelOverlay"></div>
+<div class="panel" id="panel">
+  <div class="panel-handle"></div>
+  <div class="panel-header">
+    <span class="panel-title" id="panelTitle">Listem</span>
+    <button class="panel-close" id="panelClose" aria-label="Paneli kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+  <div class="panel-footer" id="panelFooter"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const SB_URL = 'https://vuuebfijlhjivwlgztfz.supabase.co'
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dWViZmlqbGhqaXZ3bGd6dGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNTAxNjksImV4cCI6MjA5NTcyNjE2OX0.j9rvKDRS6OcQb6k2J9ycSJFcxydfH6aoytJGhACQ3uY'
+const SK  = 'catalog_list_v1'
+
+// ── EMAIL CONFIRM REDIRECT ────────────────────────────────────────────────────
+;(function () {
+  const h = new URLSearchParams(window.location.hash.slice(1))
+  if (h.get('type') === 'signup' || h.get('type') === 'email_change') {
+    window.location.replace('/confirm')
+  }
+})()
+
+// ── SLUG ─────────────────────────────────────────────────────────────────────
+const slug = window.location.pathname.split('/').filter(Boolean).pop() || ''
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let STORE    = null
+let PRODUCTS = []  // [{id, brand, name, code, price, status, variations:[{id,name,image_url,sort_order,interest_count}]}]
+let list     = JSON.parse(localStorage.getItem(SK) || '[]')
+let filterBrand = 'all'
+let sortMode    = 'newest'
+let searchQ     = ''
+let panelOpen   = false
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const fmt    = p => (+p || 0).toLocaleString('tr-TR') + ' TL'
+const key    = (pid, vid) => pid + '::' + vid
+const inList = (pid, vid) => list.includes(key(pid, vid))
+const save   = () => { localStorage.setItem(SK, JSON.stringify(list)); updateIsland(); if (panelOpen) renderPanel() }
+const waPhone = () => STORE?.whatsapp_phone || ''
+
+function toggle (pid, vid) {
+  const k = key(pid, vid), i = list.indexOf(k)
+  const adding = i === -1
+  adding ? list.push(k) : list.splice(i, 1)
+  if (adding) incrementProductInterest(pid)
+  save()
+}
+
+function toggleAll (pid) {
+  const p = PRODUCTS.find(x => x.id === pid)
+  if (!p) return
+  const allIn = p.variations.every(v => inList(pid, v.id))
+  p.variations.forEach(v => {
+    const k = key(pid, v.id), i = list.indexOf(k)
+    if (allIn && i > -1) list.splice(i, 1)
+    if (!allIn && i === -1) list.push(k)
+  })
+  if (!allIn) incrementProductInterest(pid)
+  save()
+}
+
+function incrementProductInterest (productId) {
+  fetch(`${SB_URL}/rest/v1/rpc/increment_product_interest`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_product_id: productId })
+  }).catch(() => {})
+}
+
+function findVariation (pid, vid) {
+  const p = PRODUCTS.find(x => x.id === pid)
+  return p?.variations.find(v => v.id === vid)
+}
+
+// ── SUPABASE FETCH ────────────────────────────────────────────────────────────
+async function fetchData () {
+  if (!slug) { showError('Mağaza adresi bulunamadı.'); return }
+
+  const h = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+
+  // Store info
+  const storeRes = await fetch(
+    `${SB_URL}/rest/v1/stores?slug=eq.${encodeURIComponent(slug)}&limit=1`,
+    { headers: h }
+  )
+  const stores = await storeRes.json()
+  if (!Array.isArray(stores) || !stores[0]) {
+    showError('Bu mağaza bulunamadı.'); return
+  }
+  STORE = stores[0]
+  applyStoreUI()
+
+  // Products with variations — always fetch first (liste mode also needs them)
+  const prodRes = await fetch(
+    `${SB_URL}/rest/v1/products?store_slug=eq.${encodeURIComponent(slug)}&status=eq.Aktif&select=*,product_variations(*)&order=created_at.desc`,
+    { headers: h }
+  )
+  const raw = await prodRes.json()
+  if (!Array.isArray(raw)) { showError('Ürünler yüklenemedi.'); return }
+
+  PRODUCTS = raw.map(p => ({
+    id: p.id,
+    brand: p.brand || '',
+    name: p.name || p.code || 'Ürün',
+    code: p.code || '',
+    note: p.note || '',
+    price: p.price || '0',
+    createdAt: p.created_at,
+    variations: (p.product_variations || []).sort((a, b) => a.sort_order - b.sort_order)
+  }))
+
+  // Check ?liste= mode (after products are loaded)
+  if (checkListeMode()) return
+
+  // Katalog açılışını say
+  fetch(`${SB_URL}/rest/v1/rpc/increment_catalog_views`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_slug: slug })
+  }).catch(() => {})
+
+  buildBrandFilter()
+  render()
+}
+
+function applyStoreUI () {
+  document.title = `${STORE.store_name} — Dijital Showroom`
+  document.getElementById('brandName').textContent = STORE.store_name
+  document.getElementById('heroStoreName').textContent = STORE.store_name
+  if (STORE.whatsapp_phone) {
+    document.getElementById('waHeaderBtn').href = `https://wa.me/${STORE.whatsapp_phone}`
+    document.getElementById('callBtn').href = `tel:+${STORE.whatsapp_phone}`
+  }
+  if (STORE.location_text) {
+    const loc = STORE.location_text
+    const mapsHref = loc.startsWith('http') ? loc : `https://maps.google.com/?q=${encodeURIComponent(loc)}`
+    document.getElementById('mapBtn').href = mapsHref
+    document.getElementById('footerLocation').style.display = 'flex'
+    document.getElementById('footerLocationText').textContent = loc.startsWith('http') ? 'Haritada Gör' : loc
+  }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function filtered () {
+  let r = [...PRODUCTS]
+  if (filterBrand !== 'all') r = r.filter(p => p.brand === filterBrand)
+  if (searchQ) {
+    const q = searchQ.toLowerCase()
+    r = r.filter(p =>
+      p.brand.toLowerCase().includes(q) ||
+      p.name.toLowerCase().includes(q) ||
+      p.code.toLowerCase().includes(q) ||
+      p.variations.some(v => v.name.toLowerCase().includes(q))
+    )
+  }
+  if (sortMode === 'newest') r.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  if (sortMode === 'price-asc') r.sort((a, b) => (+a.price || 0) - (+b.price || 0))
+  if (sortMode === 'price-desc') r.sort((a, b) => (+b.price || 0) - (+a.price || 0))
+  if (sortMode === 'name') r.sort((a, b) => a.name.localeCompare(b.name, 'tr'))
+  return r
+}
+
+function render () {
+  const skeleton = document.getElementById('skeletonGrid')
+  if (skeleton) skeleton.style.display = 'none'
+  const c = document.getElementById('productContainer')
+  const f = filtered()
+  document.getElementById('countLabel').textContent = f.length + ' ürün'
+
+  if (!f.length) {
+    c.innerHTML = '<div class="empty-state"><p style="font-size:20px;color:var(--border)">—</p><p>Bu kriterlere uygun ürün bulunamadı. Filtreleri değiştirmeyi deneyin.</p></div>'
+    updateIsland(); return
+  }
+
+  let h = ''
+  f.forEach((p, fi) => {
+    const stagger = Math.min(fi * 40, 200)
+    const allIn = p.variations.every(v => inList(p.id, v.id))
+    const priceNum = +p.price || 0
+    const priceStr = priceNum ? fmt(priceNum) : ''
+
+    h += `<div class="product-group" style="animation-delay:${stagger}ms">`
+    h += `<div class="group-header">`
+    h += `<div class="group-header-left">`
+    h += `<div class="group-title-row"><h2 class="group-name">${esc(p.name)}</h2>`
+    if (p.code) h += `<span class="group-code">${esc(p.code)}</span>`
+    h += `</div>`
+    if (priceStr) h += `<span class="group-price">${priceStr}</span>`
+    if (p.brand) h += `<span class="group-brand">Marka : ${esc(p.brand)}</span>`
+    h += `</div><div class="group-header-right">`
+    h += `<button class="group-btn" data-a="ta" data-pid="${p.id}">${allIn ? 'Listeden Çıkar' : 'Tümünü Listele'}</button>`
+    h += `<button class="group-btn wa" data-a="wag" data-pid="${p.id}">WhatsApp</button>`
+    h += `</div></div>`
+
+    if (p.note) h += `<p class="group-note">${esc(p.note)}</p>`
+    h += `<div class="variants-grid">`
+    p.variations.forEach((v, vi) => {
+      const il = inList(p.id, v.id)
+      h += `<div class="variant-card${il ? ' in-list' : ''}">`
+      h += `<div class="variant-img">`
+      if (v.image_url) {
+        h += `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>`
+        h += `<div class="img-placeholder" style="display:none">${placeholderSVG()}</div>`
+      } else {
+        h += `<div class="img-placeholder">${placeholderSVG()}</div>`
+      }
+      h += `<button class="list-toggle${il ? ' in-list' : ''}" data-a="t" data-pid="${p.id}" data-vid="${v.id}" aria-label="${il ? 'Listeden çıkar' : 'Listeye ekle'}">`
+      h += `<div class="lt-icon"><span class="lt-h"></span><span class="lt-v"></span><span class="lt-check"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>`
+      h += `</button></div>`
+      h += `<div class="variant-info">`
+      if (v.name && v.name.trim()) h += `<span class="variant-name">${esc(v.name)}</span>`
+      h += `</div></div>`
+    })
+    h += `</div></div>`
+  })
+
+  c.innerHTML = h
+  updateIsland()
+}
+
+function esc (s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+function placeholderSVG () {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".25"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>`
+}
+
+function showError (msg) {
+  document.getElementById('skeletonGrid').style.display = 'none'
+  document.getElementById('productContainer').innerHTML = `<div class="error-state"><h2>Hata</h2><p>${msg}</p></div>`
+}
+
+function buildBrandFilter () {
+  const sel = document.getElementById('filterBrand')
+  const brands = [...new Set(PRODUCTS.map(p => p.brand).filter(Boolean))].sort((a,b) => a.localeCompare(b,'tr'))
+  brands.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; sel.appendChild(o) })
+}
+
+// ── ISLAND ────────────────────────────────────────────────────────────────────
+function updateIsland () {
+  const wrap = document.getElementById('islandWrap')
+  const badge = document.getElementById('islandBadge')
+  const prev = +badge.textContent || 0
+  badge.textContent = list.length
+  wrap.classList.toggle('visible', list.length > 0)
+  if (list.length !== prev) { badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump') }
+  document.querySelectorAll('.list-toggle').forEach(btn => {
+    const il = inList(btn.dataset.pid, btn.dataset.vid)
+    btn.classList.toggle('in-list', il)
+    btn.closest('.variant-card')?.classList.toggle('in-list', il)
+  })
+  document.querySelectorAll('[data-a="ta"]').forEach(btn => {
+    const p = PRODUCTS.find(x => x.id === btn.dataset.pid)
+    if (p) btn.textContent = p.variations.every(v => inList(p.id, v.id)) ? 'Listeden Çıkar' : 'Tümünü Listele'
+  })
+}
+
+// ── PANEL ─────────────────────────────────────────────────────────────────────
+function openPanel () {
+  panelOpen = true
+  const panel = document.getElementById('panel')
+  panel.classList.add('open')
+  document.getElementById('panelOverlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+  renderPanel()
+  panel._prevFocus = document.activeElement
+  const focusable = panel.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])')
+  if (focusable[0]) focusable[0].focus()
+  panel._trapHandler = function(e) {
+    if (e.key !== 'Tab') return
+    const els = panel.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])')
+    const first = els[0], last = els[els.length - 1]
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus() } }
+    else { if (document.activeElement === last) { e.preventDefault(); first.focus() } }
+  }
+  panel.addEventListener('keydown', panel._trapHandler)
+}
+function closePanel () {
+  panelOpen = false
+  const panel = document.getElementById('panel')
+  panel.classList.remove('open')
+  document.getElementById('panelOverlay').classList.remove('open')
+  document.body.style.overflow = ''
+  if (panel._trapHandler) panel.removeEventListener('keydown', panel._trapHandler)
+  if (panel._prevFocus) panel._prevFocus.focus()
+}
+
+function renderPanel () {
+  const body = document.getElementById('panelBody')
+  const footer = document.getElementById('panelFooter')
+  document.getElementById('panelTitle').textContent = `Listem (${list.length})`
+  if (!list.length) { body.innerHTML = '<div class="panel-empty">Listeni oluşturmaya başlamak için ürün kartlarındaki + butonuna dokun.</div>'; footer.innerHTML = ''; return }
+
+  let h = ''
+  list.forEach(k => {
+    const [pid, vid] = k.split('::')
+    const p = PRODUCTS.find(x => x.id === pid)
+    const v = findVariation(pid, vid)
+    if (!p || !v) return
+    h += `<div class="panel-item">`
+    h += `<div class="panel-item-thumb">${v.image_url ? `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" loading="lazy"/>` : ''}</div>`
+    h += `<div class="panel-item-info"><div class="panel-item-name">${esc(p.brand ? p.brand + ' ' : '')}${esc(p.name)} — ${esc(v.name || '')}</div><div class="panel-item-sub">${esc(p.code || '')}</div></div>`
+    h += `<span class="panel-item-price">${+p.price ? fmt(+p.price) : ''}</span>`
+    h += `<button class="panel-item-remove" aria-label="Listeden çıkar" data-a="t" data-pid="${pid}" data-vid="${vid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`
+    h += `</div>`
+  })
+  body.innerHTML = h
+
+  footer.innerHTML = `<button class="panel-clear-btn" id="panelClearBtn">Listeyi Temizle</button>`
+  document.getElementById('panelClearBtn').onclick = () => { list = []; save(); renderPanel() }
+}
+
+// ── WHATSAPP ──────────────────────────────────────────────────────────────────
+function buildShareURL (items) {
+  const codes = items.map(k => {
+    const [pid, vid] = k.split('::')
+    return findVariation(pid, vid)?.id || ''
+  }).filter(Boolean)
+  return window.location.origin + window.location.pathname + '?liste=' + encodeURIComponent(codes.join(','))
+}
+
+let _pendingWhatsAppFn = null
+
+function genListCode () {
+  return Math.random().toString(36).slice(2, 8).toUpperCase()
+}
+
+function buildShareURLWithCustomer (items, name, phone) {
+  const vids = items.map(k => {
+    const [pid, vid] = k.split('::')
+    return findVariation(pid, vid)?.id || ''
+  }).filter(Boolean)
+  const params = new URLSearchParams()
+  params.set('liste', vids.join(','))
+  if (name) params.set('ad', name)
+  if (phone) params.set('tel', phone)
+  params.set('kod', genListCode())
+  params.set('tarih', new Date().toLocaleDateString('tr-TR'))
+  return window.location.origin + window.location.pathname + '?' + params.toString()
+}
+
+function sendWhatsApp (items) {
+  captureLeadAndSend((name, phone) => {
+    const link = buildShareURLWithCustomer(items, name, phone)
+    let msg = 'Bu listedeki ürünlerle ilgili bilgi almak istiyordum:\n' + link
+    if (name) msg = name + ':\n' + msg
+    window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
+    const vids = items.map(k => {
+      const [pid, vid] = k.split('::')
+      return findVariation(pid, vid)?.id || ''
+    }).filter(Boolean)
+    saveLead(name, phone, vids)
+  })
+}
+
+function sendProductWhatsApp (pid) {
+  const p = PRODUCTS.find(x => x.id === pid)
+  if (!p) return
+  const items = p.variations
+    .filter(v => v.status !== 'Gizli')
+    .map(v => pid + '::' + v.id)
+  if (!items.length) return
+  sendWhatsApp(items)
+}
+
+function captureLeadAndSend (whatsappFn) {
+  _pendingWhatsAppFn = whatsappFn
+  const modal = document.getElementById('leadModal')
+  modal.style.display = 'flex'
+  setTimeout(() => document.getElementById('leadName').focus(), 100)
+}
+
+function closeLeadModal () {
+  document.getElementById('leadModal').style.display = 'none'
+  document.getElementById('leadName').value = ''
+  document.getElementById('leadPhone').value = ''
+}
+
+function saveLead (name, phone, variationIds) {
+  if (!name) return
+  try {
+    const leads = JSON.parse(localStorage.getItem('sk_leads') || '[]')
+    leads.unshift({ name, phone, items: variationIds.length, store: STORE?.store_name || '', slug: STORE?.slug || '', ts: new Date().toISOString() })
+    localStorage.setItem('sk_leads', JSON.stringify(leads.slice(0, 200)))
+  } catch (_) {}
+  const userId = STORE?.user_id
+  const storeSlug = STORE?.slug
+  if (!userId || !storeSlug) return
+  const payload = {
+    id: crypto.randomUUID(),
+    store_slug: storeSlug,
+    user_id: userId,
+    name,
+    phone: phone || '',
+    interest_count: variationIds.length,
+    last_seen: new Date().toISOString(),
+    marketing_opt_in: false,
+    variation_ids: variationIds
+  }
+  fetch(`${SB_URL}/rest/v1/leads`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(payload)
+  }).catch(() => {})
+}
+
+function createLeadModal () {
+  const modal = document.createElement('div')
+  modal.id = 'leadModal'
+  modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:9000;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.45);'
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;font-family:'DM Sans',system-ui,sans-serif;">
+      <div style="width:36px;height:4px;background:#e5e4e0;border-radius:2px;margin:0 auto 20px;"></div>
+      <h2 style="font-size:17px;font-weight:700;margin:0 0 4px;color:#0d0d0d;">WhatsApp'a bağlanıyor</h2>
+      <p style="font-size:13px;color:#888;margin:0 0 20px;">İsteğe bağlı bilgilerini bırakabilirsin.</p>
+      <input id="leadName" placeholder="Ad Soyad (isteğe bağlı)" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;color:#0d0d0d;">
+      <input id="leadPhone" placeholder="Telefon (isteğe bağlı)" type="tel" autocomplete="tel" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;color:#0d0d0d;">
+      <button id="leadContinue" style="width:100%;background:#25d366;color:#fff;border:none;border-radius:100px;padding:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:8px;">WhatsApp'ı Aç</button>
+      <button id="leadSkip" style="width:100%;background:transparent;color:#888;border:1px solid #e5e4e0;border-radius:100px;padding:14px;font-size:15px;font-family:inherit;cursor:pointer;">Atla</button>
+    </div>`
+  document.body.appendChild(modal)
+  modal.addEventListener('click', e => { if (e.target === modal) { closeLeadModal(); _pendingWhatsAppFn && _pendingWhatsAppFn('', ''); _pendingWhatsAppFn = null } })
+  document.getElementById('leadContinue').onclick = () => {
+    const name = document.getElementById('leadName').value.trim()
+    const phone = document.getElementById('leadPhone').value.trim()
+    closeLeadModal()
+    if (_pendingWhatsAppFn) { _pendingWhatsAppFn(name, phone); _pendingWhatsAppFn = null }
+  }
+  document.getElementById('leadSkip').onclick = () => {
+    closeLeadModal()
+    if (_pendingWhatsAppFn) { _pendingWhatsAppFn('', ''); _pendingWhatsAppFn = null }
+  }
+  document.getElementById('leadName').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('leadPhone').focus() })
+  document.getElementById('leadPhone').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('leadContinue').click() })
+}
+
+// ── LİSTE SAYFASI (?liste= parametresi) ──────────────────────────────────────
+function checkListeMode () {
+  const params = new URLSearchParams(window.location.search)
+  const raw = params.get('liste')
+  if (!raw) return false
+
+  const customerName  = params.get('ad') || ''
+  const customerPhone = params.get('tel') || ''
+  const listCode      = params.get('kod') || ''
+  const listDate      = params.get('tarih') || ''
+
+  const ids = raw.split(',').map(s => s.trim())
+  const found = ids.map(id => {
+    for (const p of PRODUCTS) {
+      const v = p.variations.find(x => x.id === id)
+      if (v) return { p, v }
+    }
+    return null
+  }).filter(Boolean)
+
+  document.body.innerHTML = ''
+  const style = document.createElement('style')
+  style.textContent = `body{margin:0;background:var(--bg);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}`
+  document.head.appendChild(style)
+
+  const hasCustomer = customerName || customerPhone || listCode
+
+  const customerCard = hasCustomer ? `
+    <div style="margin:16px 20px 0;background:#fff;border:1px solid #e5e4e0;border-radius:12px;padding:16px 18px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:12px;">MÜŞTERİ BİLGİSİ</div>
+      ${customerName ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Ad Soyad</span><span style="font-size:13px;font-weight:600;color:#0d0d0d;">${esc(customerName)}</span></div>` : ''}
+      ${customerPhone ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Telefon</span><a href="tel:${esc(customerPhone)}" style="font-size:13px;font-weight:600;color:#0d0d0d;text-decoration:none;">${esc(customerPhone)}</a></div>` : ''}
+      ${listDate ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;"><span style="font-size:13px;color:#888;">Tarih</span><span style="font-size:13px;color:#0d0d0d;">${esc(listDate)}</span></div>` : ''}
+      ${listCode ? `<div style="border-top:1px solid #e5e4e0;margin-top:10px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13px;color:#888;">Liste Kodu</span><span style="font-size:15px;font-weight:800;font-family:ui-monospace,monospace;letter-spacing:.1em;color:#0d0d0d;">${esc(listCode)}</span></div>` : ''}
+    </div>` : ''
+
+  const root = document.createElement('div')
+  root.style.cssText = 'max-width:600px;margin:0 auto;padding:0 0 60px;'
+  root.innerHTML = `
+    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+        <span style="font-weight:600;font-size:14px;">${esc(STORE?.store_name || 'Katalog')}</span>
+        <a href="${window.location.pathname}" style="font-size:12px;color:var(--muted);border:1px solid var(--border);padding:5px 12px;border-radius:100px;">← Kataloğa Dön</a>
+      </div>
+    </div>
+    ${customerCard}
+    <div style="padding:${hasCustomer ? '16px' : '28px'} 20px 16px;">
+      <h1 style="font-size:20px;font-weight:600;margin:0 0 4px;">Seçili Ürünler</h1>
+      <p style="font-size:13px;color:#888;margin:0;">${found.length} ürün seçildi</p>
+    </div>`
+
+  const listDiv = document.createElement('div')
+  listDiv.style.cssText = 'padding:0 20px;display:flex;flex-direction:column;gap:8px;'
+  found.forEach(({ p, v }, i) => {
+    const item = document.createElement('div')
+    item.style.cssText = `background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:12px;animation:fadeUp .3s ${i*60}ms both;`
+    item.innerHTML = `
+      <div style="width:56px;height:74px;border-radius:8px;background:var(--bg);overflow:hidden;flex-shrink:0;">
+        ${v.image_url ? `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" style="width:56px;height:74px;object-fit:cover;"/>` : ''}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;">${esc(p.brand || '')}</div>
+        <div style="font-size:14px;font-weight:500;">${esc(p.name)}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(v.name || '')}${p.code ? ' · <span style="font-family:ui-monospace,monospace;font-size:10px;">' + esc(p.code) + '</span>' : ''}</div>
+      </div>
+      ${+p.price ? `<div style="font-size:15px;font-weight:700;flex-shrink:0;">${fmt(+p.price)}</div>` : ''}`
+    listDiv.appendChild(item)
+  })
+  root.appendChild(listDiv)
+
+  document.body.appendChild(root)
+  return true
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast (msg) {
+  const t = document.getElementById('toast')
+  t.textContent = msg; t.classList.add('show')
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2000)
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]')
+  if (!b) return
+  const { a, pid, vid } = b.dataset
+
+  if (a === 't') {
+    const adding = !inList(pid, vid)
+    const vName = findVariation(pid, vid)?.name || ''
+    toggle(pid, vid)
+    const btn = document.querySelector(`.list-toggle[data-pid="${pid}"][data-vid="${vid}"]`)
+    if (btn && adding) { btn.classList.remove('popping'); void btn.offsetWidth; btn.classList.add('popping') }
+    toast(adding ? `${vName} listeye eklendi` : `${vName} listeden çıkarıldı`)
+    if (panelOpen) renderPanel()
+  }
+  if (a === 'ta') {
+    const p = PRODUCTS.find(x => x.id === pid)
+    const wasAll = p?.variations.every(v => inList(pid, v.id))
+    toggleAll(pid)
+    toast(wasAll ? `${p?.name || ''} listeden çıkarıldı` : `${p?.name || ''} listelendi`)
+  }
+  if (a === 'wag') sendProductWhatsApp(pid)
+})
+
+document.getElementById('islandListBtn').onclick = openPanel
+document.getElementById('islandWaBtn').onclick = () => { if (list.length) sendWhatsApp(list) }
+document.getElementById('panelClose').onclick = closePanel
+document.getElementById('panelOverlay').onclick = closePanel
+document.getElementById('filterBrand').onchange = function () { filterBrand = this.value; render() }
+document.getElementById('sortBy').onchange = function () { sortMode = this.value; render() }
+let _st = null
+document.getElementById('searchInput').oninput = function () { searchQ = this.value.trim(); clearTimeout(_st); _st = setTimeout(render, 150) }
+window.addEventListener('scroll', () => { document.getElementById('header').classList.toggle('scrolled', window.scrollY > 8) }, { passive: true })
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen) closePanel() })
+
+// ── SKELETON ──────────────────────────────────────────────────────────────────
+;(function showSkeleton () {
+  const g = document.getElementById('skeletonGrid')
+  let h = ''
+  for (let i = 0; i < 8; i++) {
+    h += `<div class="skeleton-card"><div class="skeleton-img skeleton"></div><div class="skeleton-text skeleton"></div><div class="skeleton-text short skeleton"></div></div>`
+  }
+  g.innerHTML = h
+})()
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+createLeadModal()
+fetchData()
+</script>
+</body>
+</html>
