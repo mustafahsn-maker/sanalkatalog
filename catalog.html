@@ -220,8 +220,13 @@ ul{list-style:none;padding:0;margin:0;}
 #tutorialOverlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;cursor:pointer;}
 #tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .35s;}
 /* iPhone 15 frame */
-.t-frame{width:204px;height:418px;background:#1a1a1e;border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px #3d3d3f,inset 0 0 0 2px #28282c,0 32px 80px rgba(0,0,0,.85);animation:tPhoneIn .45s var(--ease-spring);}
-@keyframes tPhoneIn{from{opacity:0;transform:scale(.86) translateY(14px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.t-frame{width:204px;height:418px;background:#1a1a1e;border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px #3d3d3f,inset 0 0 0 2px #28282c,0 32px 80px rgba(0,0,0,.85);animation:tPhoneIn .7s var(--ease-spring);}
+@keyframes tPhoneIn{
+  0%{opacity:0;transform:scale(.72) translateY(40px);filter:blur(12px);}
+  55%{opacity:1;transform:scale(1.03) translateY(-5px);filter:blur(0);}
+  75%{transform:scale(.99) translateY(2px);}
+  100%{transform:scale(1) translateY(0);}
+}
 .t-btn-side{position:absolute;right:-3.5px;top:116px;width:3.5px;height:68px;background:#28282c;border-radius:0 2px 2px 0;}
 .t-btn-silent{position:absolute;left:-3.5px;top:74px;width:3.5px;height:18px;background:#28282c;border-radius:2px 0 0 2px;}
 .t-btn-vol-up{position:absolute;left:-3.5px;top:102px;width:3.5px;height:38px;background:#28282c;border-radius:2px 0 0 2px;}
@@ -234,8 +239,8 @@ ul{list-style:none;padding:0;margin:0;}
 .t-sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 7px;z-index:4;}
 .t-sbar-time{font-size:10px;font-weight:700;color:#0d0d0d;font-family:'DM Sans',sans-serif;}
 .t-batt{display:flex;align-items:center;gap:1px;}
-.t-batt-body{width:17px;height:9px;border:1.3px solid rgba(0,0,0,.35);border-radius:2.5px;position:relative;}
-.t-batt-body::after{content:'';position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:70%;background:#0d0d0d;border-radius:1px;}
+.t-batt-body{width:17px;height:9px;border:1.3px solid rgba(0,0,0,.35);border-radius:2.5px;padding:1.5px;display:flex;align-items:center;}
+.t-batt-fill{width:70%;height:100%;background:#0d0d0d;border-radius:1px;transition:width .3s;}
 .t-batt-tip{width:2px;height:5px;background:rgba(0,0,0,.35);border-radius:0 1px 1px 0;margin-left:1px;}
 /* Store header */
 .t-header{position:absolute;top:52px;left:0;right:0;height:36px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 12px;gap:8px;z-index:3;}
@@ -325,8 +330,8 @@ ul{list-style:none;padding:0;margin:0;}
     <div class="t-screen">
       <div class="t-di"></div>
       <div class="t-sbar">
-        <span class="t-sbar-time">9:41</span>
-        <div class="t-batt"><div class="t-batt-body"></div><div class="t-batt-tip"></div></div>
+        <span class="t-sbar-time" id="tTime">9:41</span>
+        <div class="t-batt"><div class="t-batt-body"><div class="t-batt-fill" id="tBattFill"></div></div><div class="t-batt-tip"></div></div>
       </div>
       <div class="t-header">
         <div class="t-hname"></div>
@@ -1039,34 +1044,51 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
     })
   }
 
+  // Real time
+  ;(function () {
+    const now = new Date()
+    const t = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0')
+    document.getElementById('tTime').textContent = t
+  })()
+
+  // Real battery
+  if ('getBattery' in navigator) {
+    navigator.getBattery().then(b => {
+      const pct = Math.round(b.level * 100)
+      const fill = document.getElementById('tBattFill')
+      if (fill) fill.style.width = pct + '%'
+    }).catch(() => {})
+  }
+
   let timer
   function close () { overlay.classList.add('hiding'); setTimeout(() => overlay.remove(), 350) }
 
   mv(P1)
 
-  setTimeout(() => { tap.classList.add('visible'); step(1) }, 600)
+  // Phone animates in 0.7s → cursor starts at 0.9s
+  setTimeout(() => { tap.classList.add('visible'); step(1) }, 900)
 
-  // Fast taps — cards 1, 2, 3
-  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tCard1', 1), 1200)
-  setTimeout(() => mv(P2), 1680)
-  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tCard2', 2), 2000)
-  setTimeout(() => mv(P3), 2420)
-  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tCard3', 3), 2740)
+  // Fast taps
+  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tCard1', 1), 1400)
+  setTimeout(() => mv(P2), 1800)
+  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tCard2', 2), 2100)
+  setTimeout(() => mv(P3), 2480)
+  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tCard3', 3), 2780)
 
-  // Slow down — island + step 2
+  // Island + step 2 (slows here)
   setTimeout(() => { island.classList.add('up'); step(2) }, 3300)
 
-  // Cursor drifts slowly to WA button
-  setTimeout(() => mv(PWA, true), 4100)
+  // Cursor drifts slowly to WA
+  setTimeout(() => mv(PWA, true), 4000)
 
   // Tap WA — step 3
   setTimeout(() => {
     tap.classList.remove('pulse'); void tap.offsetWidth; tap.classList.add('pulse')
     iwa.classList.add('tapped')
     step(3)
-  }, 5100)
+  }, 4900)
 
-  timer = setTimeout(close, 7000)
+  timer = setTimeout(close, 6500)
   overlay.addEventListener('click', () => { clearTimeout(timer); close() })
 })()
 
