@@ -236,12 +236,14 @@ ul{list-style:none;padding:0;margin:0;}
 /* Dynamic Island */
 .t-di{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:74px;height:24px;background:#000;border-radius:20px;z-index:5;}
 /* Status bar */
-.t-sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 7px;z-index:4;}
-.t-sbar-time{font-size:10px;font-weight:700;color:#0d0d0d;font-family:'DM Sans',sans-serif;}
+.t-sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 16px 7px;z-index:4;}
+.t-sbar-time{font-size:11px;font-weight:700;color:#0d0d0d;font-family:-apple-system,'DM Sans',sans-serif;letter-spacing:-.3px;}
+.t-sbar-right{display:flex;align-items:center;gap:5px;}
+.t-sig,.t-wifi{display:block;flex-shrink:0;}
 .t-batt{display:flex;align-items:center;gap:1px;}
-.t-batt-body{width:17px;height:9px;border:1.3px solid rgba(0,0,0,.35);border-radius:2.5px;padding:1.5px;display:flex;align-items:center;}
-.t-batt-fill{width:70%;height:100%;background:#0d0d0d;border-radius:1px;transition:width .3s;}
-.t-batt-tip{width:2px;height:5px;background:rgba(0,0,0,.35);border-radius:0 1px 1px 0;margin-left:1px;}
+.t-batt-body{width:18px;height:9px;border:1.3px solid rgba(0,0,0,.32);border-radius:2.5px;padding:1.5px;display:flex;align-items:center;}
+.t-batt-fill{width:70%;height:100%;background:#0d0d0d;border-radius:1px;transition:width .3s,background .3s;}
+.t-batt-tip{width:2px;height:5px;background:rgba(0,0,0,.3);border-radius:0 1px 1px 0;margin-left:1px;}
 /* Store header */
 .t-header{position:absolute;top:52px;left:0;right:0;height:36px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 12px;gap:8px;z-index:3;}
 .t-hname{width:72px;height:9px;background:#d0d0d0;border-radius:4px;}
@@ -289,6 +291,8 @@ ul{list-style:none;padding:0;margin:0;}
 .t-sl.done{color:rgba(255,255,255,.4);}
 .t-sl.wa{color:#25d366;transform:scale(1.08);}
 .t-sdot{color:rgba(255,255,255,.15);font-size:9px;margin-top:1px;}
+.t-tagline{font-family:'DM Sans',system-ui,sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:-.03em;text-align:center;animation:tTagIn .5s .6s var(--ease-spring) both;}
+@keyframes tTagIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 .t-skip{font-family:'DM Sans',system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,.28);letter-spacing:.02em;}
 </style>
 </head>
@@ -331,7 +335,20 @@ ul{list-style:none;padding:0;margin:0;}
       <div class="t-di"></div>
       <div class="t-sbar">
         <span class="t-sbar-time" id="tTime">9:41</span>
-        <div class="t-batt"><div class="t-batt-body"><div class="t-batt-fill" id="tBattFill"></div></div><div class="t-batt-tip"></div></div>
+        <div class="t-sbar-right">
+          <svg class="t-sig" width="15" height="11" viewBox="0 0 15 11" fill="#0d0d0d">
+            <rect x="0" y="7.5" width="2.5" height="3.5" rx=".5"/>
+            <rect x="4" y="5" width="2.5" height="6" rx=".5"/>
+            <rect x="8" y="2" width="2.5" height="9" rx=".5"/>
+            <rect x="12" y="0" width="2.5" height="11" rx=".5"/>
+          </svg>
+          <svg class="t-wifi" width="14" height="11" viewBox="0 0 20 15" fill="none">
+            <circle cx="10" cy="13.5" r="1.8" fill="#0d0d0d"/>
+            <path d="M5.8 9.2a6 6 0 018.4 0" stroke="#0d0d0d" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M2 5.5a11 11 0 0116 0" stroke="#0d0d0d" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <div class="t-batt"><div class="t-batt-body"><div class="t-batt-fill" id="tBattFill"></div></div><div class="t-batt-tip"></div></div>
+        </div>
       </div>
       <div class="t-header">
         <div class="t-hname"></div>
@@ -366,6 +383,7 @@ ul{list-style:none;padding:0;margin:0;}
       <div class="t-tap" id="tTap"></div>
     </div>
   </div>
+  <div class="t-tagline">Vitrin cebinde.</div>
   <div class="t-steps-row">
     <span class="t-sl" id="tsl1">Seç</span>
     <span class="t-sdot">›</span>
@@ -1056,7 +1074,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
     navigator.getBattery().then(b => {
       const pct = Math.round(b.level * 100)
       const fill = document.getElementById('tBattFill')
-      if (fill) fill.style.width = pct + '%'
+      if (!fill) return
+      fill.style.width = pct + '%'
+      fill.style.background = pct <= 20 ? '#ff3b30' : pct <= 40 ? '#ff9500' : '#0d0d0d'
     }).catch(() => {})
   }
 
