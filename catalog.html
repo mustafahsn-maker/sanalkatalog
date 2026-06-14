@@ -217,83 +217,92 @@ ul{list-style:none;padding:0;margin:0;}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
 /* TUTORIAL OVERLAY */
-#tutorialOverlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;cursor:pointer;}
-#tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .35s;}
+#tutorialOverlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:#07070f;overflow:hidden;}
+#tutorialOverlay::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);animation:tBgBreath 4s ease-in-out infinite;pointer-events:none;}
+#tutorialOverlay::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100% 50% at 50% 0%,rgba(255,255,255,.04) 0%,transparent 60%);pointer-events:none;}
+@keyframes tBgBreath{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6;}50%{transform:translate(-50%,-50%) scale(1.25);opacity:1;}}
+#tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .5s cubic-bezier(.4,0,.2,1);}
 /* iPhone 15 frame */
-.t-frame{width:204px;height:418px;background:#1a1a1e;border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px #3d3d3f,inset 0 0 0 2px #28282c,0 32px 80px rgba(0,0,0,.85);animation:tPhoneIn .7s var(--ease-spring);}
+.t-frame{width:204px;height:418px;background:linear-gradient(155deg,#2f2f33 0%,#1a1a1e 30%,#222226 70%,#1e1e22 100%);border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 0 0 3px #1a1a1e,0 50px 100px rgba(0,0,0,.95),0 20px 40px rgba(0,0,0,.6),0 0 80px rgba(34,197,94,.05);animation:tPhoneIn .95s var(--ease-spring) both;}
 @keyframes tPhoneIn{
-  0%{opacity:0;transform:scale(.72) translateY(40px);filter:blur(12px);}
-  55%{opacity:1;transform:scale(1.03) translateY(-5px);filter:blur(0);}
-  75%{transform:scale(.99) translateY(2px);}
+  0%{opacity:0;transform:scale(.55) translateY(80px);filter:blur(28px);}
+  45%{opacity:1;filter:blur(0);}
+  65%{transform:scale(1.06) translateY(-10px);}
+  80%{transform:scale(.97) translateY(5px);}
+  92%{transform:scale(1.02) translateY(-2px);}
   100%{transform:scale(1) translateY(0);}
 }
-.t-btn-side{position:absolute;right:-3.5px;top:116px;width:3.5px;height:68px;background:#28282c;border-radius:0 2px 2px 0;}
-.t-btn-silent{position:absolute;left:-3.5px;top:74px;width:3.5px;height:18px;background:#28282c;border-radius:2px 0 0 2px;}
-.t-btn-vol-up{position:absolute;left:-3.5px;top:102px;width:3.5px;height:38px;background:#28282c;border-radius:2px 0 0 2px;}
-.t-btn-vol-dn{position:absolute;left:-3.5px;top:148px;width:3.5px;height:38px;background:#28282c;border-radius:2px 0 0 2px;}
+.t-btn-side{position:absolute;right:-3.5px;top:116px;width:3.5px;height:68px;background:linear-gradient(180deg,#323234,#2a2a2e);border-radius:0 2px 2px 0;}
+.t-btn-silent{position:absolute;left:-3.5px;top:74px;width:3.5px;height:18px;background:#2a2a2e;border-radius:2px 0 0 2px;}
+.t-btn-vol-up{position:absolute;left:-3.5px;top:102px;width:3.5px;height:38px;background:#2a2a2e;border-radius:2px 0 0 2px;}
+.t-btn-vol-dn{position:absolute;left:-3.5px;top:148px;width:3.5px;height:38px;background:#2a2a2e;border-radius:2px 0 0 2px;}
 /* Screen */
 .t-screen{position:absolute;top:5px;left:5px;right:5px;bottom:5px;background:#f5f5f5;border-radius:40px;overflow:hidden;}
+/* Glare sweep */
+.t-glare{position:absolute;inset:0;z-index:20;border-radius:40px;pointer-events:none;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.24) 48%,rgba(255,255,255,.1) 52%,transparent 68%);opacity:0;transform:translateX(-120%);}
+.t-glare.sweep{animation:tGlareSweep .78s cubic-bezier(.23,1,.32,1) .9s forwards;}
+@keyframes tGlareSweep{0%{opacity:0;transform:translateX(-120%);}15%{opacity:1;}85%{opacity:.8;}100%{opacity:0;transform:translateX(120%);}}
 /* Dynamic Island */
 .t-di{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:74px;height:24px;background:#000;border-radius:20px;z-index:5;}
-/* Status bar */
-.t-sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 16px 7px;z-index:4;}
-.t-sbar-time{font-size:11px;font-weight:700;color:#0d0d0d;font-family:-apple-system,'DM Sans',sans-serif;letter-spacing:-.3px;}
-.t-sbar-right{display:flex;align-items:center;gap:5px;}
-.t-sig,.t-wifi{display:block;flex-shrink:0;}
-.t-batt{display:flex;align-items:center;gap:1px;}
-.t-batt-body{width:18px;height:9px;border:1.3px solid rgba(0,0,0,.32);border-radius:2.5px;padding:1.5px;display:flex;align-items:center;}
-.t-batt-fill{width:70%;height:100%;background:#0d0d0d;border-radius:1px;transition:width .3s,background .3s;}
-.t-batt-tip{width:2px;height:5px;background:rgba(0,0,0,.3);border-radius:0 1px 1px 0;margin-left:1px;}
 /* Store header */
-.t-header{position:absolute;top:52px;left:0;right:0;height:36px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 12px;gap:8px;z-index:3;}
+.t-header{position:absolute;top:42px;left:0;right:0;height:36px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 12px;gap:8px;z-index:3;}
 .t-hname{width:72px;height:9px;background:#d0d0d0;border-radius:4px;}
 .t-hdots{margin-left:auto;display:flex;gap:5px;}
 .t-hdots span{width:8px;height:8px;border-radius:50%;background:#d0d0d0;}
 /* Product grid */
-.t-grid{position:absolute;top:88px;left:0;right:0;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;}
-.t-pcard{aspect-ratio:3/4;border-radius:8px;position:relative;overflow:hidden;border:1.5px solid transparent;transition:border-color .2s;}
+.t-grid{position:absolute;top:78px;left:0;right:0;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;}
+.t-pcard{aspect-ratio:3/4;border-radius:8px;position:relative;overflow:hidden;border:1.5px solid transparent;transition:border-color .25s,box-shadow .25s;}
 .t-pcard:nth-child(1){background:linear-gradient(145deg,#f0dfc5,#d4b88a);}
 .t-pcard:nth-child(2){background:linear-gradient(145deg,#cfe0ec,#a8c0d0);}
 .t-pcard:nth-child(3){background:linear-gradient(145deg,#e2d4ec,#c4aad4);}
 .t-pcard:nth-child(4){background:#e0e0e0;}
-.t-pcard.selected{border-color:#0d0d0d;}
+.t-pcard.selected{border-color:#0d0d0d;box-shadow:0 0 0 1px rgba(0,0,0,.08),inset 0 0 8px rgba(0,0,0,.05);}
 /* + button */
-.t-plus{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.96);border:1.2px solid rgba(0,0,0,.13);display:grid;place-items:center;box-shadow:0 1px 6px rgba(0,0,0,.12);transition:background .15s,transform .12s;}
-.t-plus.tapped{background:#0d0d0d;transform:scale(1.2);}
+.t-plus{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.96);border:1.2px solid rgba(0,0,0,.13);display:grid;place-items:center;box-shadow:0 1px 6px rgba(0,0,0,.12);transition:background .15s,transform .15s,box-shadow .15s;}
+.t-plus.tapped{background:#0d0d0d;transform:scale(1.22);box-shadow:0 2px 12px rgba(0,0,0,.3);}
 .t-plus.tapped path,.t-plus.done path{stroke:#fff;}
 .t-plus.done{background:#0d0d0d;}
-/* Checkmark */
-.t-check{position:absolute;inset:0;background:rgba(13,13,13,.2);display:grid;place-items:center;opacity:0;transition:opacity .2s;}
+/* Checkmark with draw animation */
+.t-check{position:absolute;inset:0;background:rgba(13,13,13,.18);display:grid;place-items:center;opacity:0;transition:opacity .2s;}
 .t-check.on{opacity:1;}
-/* Ripple */
+.t-check svg path{stroke-dasharray:24;stroke-dashoffset:24;transition:none;}
+.t-check.on svg path{stroke-dashoffset:0;transition:stroke-dashoffset .42s .08s cubic-bezier(.4,0,.2,1);}
+/* Ripples */
 .t-ripple{position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.55);transform:translate(-50%,-50%);pointer-events:none;}
-.t-ripple.pop{animation:tRipple .42s ease-out forwards;}
+.t-ripple.pop{animation:tRipple .45s ease-out forwards;}
 @keyframes tRipple{to{width:90px;height:90px;opacity:0;}}
+.t-ripple2{position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);transform:translate(-50%,-50%);pointer-events:none;box-sizing:border-box;}
+.t-ripple2.pop{animation:tRipple2 .6s ease-out .1s forwards;}
+@keyframes tRipple2{to{width:120px;height:120px;opacity:0;}}
 /* Island */
 .t-island{position:absolute;bottom:-52px;left:6px;right:6px;height:40px;background:#0d0d0d;border-radius:100px;display:flex;align-items:center;padding:4px;transition:bottom .42s var(--ease-spring);}
 .t-island.up{bottom:8px;}
+@keyframes tIsGlow{0%{box-shadow:0 0 0 0 rgba(255,255,255,.5);}60%{box-shadow:0 0 0 8px rgba(255,255,255,.12);}100%{box-shadow:0 0 0 16px rgba(255,255,255,0);}}
+.t-island.glow{animation:tIsGlow .9s ease-out .45s both;}
 .t-ibadge{width:26px;height:26px;background:#fff;color:#0d0d0d;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;margin-left:5px;}
-.t-ibadge.bump{animation:tBadgeBump .28s var(--ease-spring);}
-@keyframes tBadgeBump{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+.t-ibadge.bump{animation:tBadgeBump .3s var(--ease-spring);}
+@keyframes tBadgeBump{0%,100%{transform:scale(1);}50%{transform:scale(1.38);}}
 .t-itext{font-size:10px;color:rgba(255,255,255,.6);flex:1;margin-left:7px;font-family:'DM Sans',sans-serif;}
 .t-iwa{background:#25d366;color:#fff;border-radius:100px;padding:5px 8px;font-size:9px;font-weight:700;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:3px;white-space:nowrap;transition:transform .12s,background .12s;}
 .t-iwa.tapped{transform:scale(.92);background:#1ea854;}
+@keyframes tWaGlow{0%{box-shadow:0 0 0 0 rgba(37,211,102,.75);}100%{box-shadow:0 0 0 12px rgba(37,211,102,0);}}
+.t-iwa.glow{animation:tWaGlow .8s ease-out;}
 /* Tap cursor */
-.t-tap{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid #fff;box-shadow:0 2px 14px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s,left .32s var(--ease-out),top .32s var(--ease-out);}
+.t-tap{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid rgba(255,255,255,.6);box-shadow:0 2px 16px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.1);opacity:0;pointer-events:none;transition:opacity .3s,left .34s var(--ease-out),top .34s var(--ease-out);}
 .t-tap.visible{opacity:1;}
-.t-tap.slow{transition:opacity .25s,left .8s var(--ease-out),top .8s var(--ease-out);}
-.t-tap.pulse{animation:tTapPulse .28s var(--ease-spring);}
-@keyframes tTapPulse{0%,100%{transform:scale(1);}35%{transform:scale(.58);}}
+.t-tap.slow{transition:opacity .3s,left .85s var(--ease-out),top .85s var(--ease-out);}
+.t-tap.pulse{animation:tTapPulse .3s var(--ease-spring);}
+@keyframes tTapPulse{0%,100%{transform:scale(1);}38%{transform:scale(.55);}}
 /* Steps row */
 .t-steps-row{display:flex;align-items:center;gap:8px;}
-.t-sl{font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.18);letter-spacing:-.01em;transition:color .35s,transform .35s;}
-.t-sl.active{color:#fff;transform:scale(1.08);}
-.t-sl.done{color:rgba(255,255,255,.4);}
-.t-sl.wa{color:#25d366;transform:scale(1.08);}
-.t-sdot{color:rgba(255,255,255,.15);font-size:9px;margin-top:1px;}
-.t-tagline{font-family:'DM Sans',system-ui,sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:-.03em;text-align:center;animation:tTagIn .5s .6s var(--ease-spring) both;}
-@keyframes tTagIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.t-skip{font-family:'DM Sans',system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,.28);letter-spacing:.02em;}
+.t-sl{font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.15);letter-spacing:-.01em;transition:color .4s,transform .4s,text-shadow .4s;}
+.t-sl.active{color:#fff;transform:scale(1.1);text-shadow:0 0 18px rgba(255,255,255,.55),0 0 36px rgba(255,255,255,.2);}
+.t-sl.done{color:rgba(255,255,255,.35);}
+.t-sl.wa{color:#25d366;transform:scale(1.1);text-shadow:0 0 18px rgba(37,211,102,.65),0 0 36px rgba(37,211,102,.25);}
+.t-sdot{color:rgba(255,255,255,.12);font-size:9px;margin-top:1px;}
+.t-tagline{font-family:'DM Sans',system-ui,sans-serif;font-size:26px;font-weight:800;letter-spacing:-.05em;text-align:center;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.8) 45%,#22c55e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tTagIn .65s .75s var(--ease-spring) both;}
+@keyframes tTagIn{from{opacity:0;transform:translateY(14px) scale(.93);}to{opacity:1;transform:translateY(0) scale(1);}}
+.t-skip{font-family:'DM Sans',system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.06em;text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -332,24 +341,8 @@ ul{list-style:none;padding:0;margin:0;}
     <div class="t-btn-vol-up"></div>
     <div class="t-btn-vol-dn"></div>
     <div class="t-screen">
+      <div class="t-glare" id="tGlare"></div>
       <div class="t-di"></div>
-      <div class="t-sbar">
-        <span class="t-sbar-time" id="tTime">9:41</span>
-        <div class="t-sbar-right">
-          <svg class="t-sig" width="15" height="11" viewBox="0 0 15 11" fill="#0d0d0d">
-            <rect x="0" y="7.5" width="2.5" height="3.5" rx=".5"/>
-            <rect x="4" y="5" width="2.5" height="6" rx=".5"/>
-            <rect x="8" y="2" width="2.5" height="9" rx=".5"/>
-            <rect x="12" y="0" width="2.5" height="11" rx=".5"/>
-          </svg>
-          <svg class="t-wifi" width="14" height="11" viewBox="0 0 20 15" fill="none">
-            <circle cx="10" cy="13.5" r="1.8" fill="#0d0d0d"/>
-            <path d="M5.8 9.2a6 6 0 018.4 0" stroke="#0d0d0d" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M2 5.5a11 11 0 0116 0" stroke="#0d0d0d" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          <div class="t-batt"><div class="t-batt-body"><div class="t-batt-fill" id="tBattFill"></div></div><div class="t-batt-tip"></div></div>
-        </div>
-      </div>
       <div class="t-header">
         <div class="t-hname"></div>
         <div class="t-hdots"><span></span><span></span><span></span></div>
@@ -359,16 +352,19 @@ ul{list-style:none;padding:0;margin:0;}
           <div class="t-plus" id="tPlus1"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg></div>
           <div class="t-check" id="tCheck1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="t-ripple" id="tRipple1"></div>
+          <div class="t-ripple2" id="tRipple1b"></div>
         </div>
         <div class="t-pcard" id="tCard2">
           <div class="t-plus" id="tPlus2"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg></div>
           <div class="t-check" id="tCheck2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="t-ripple" id="tRipple2"></div>
+          <div class="t-ripple2" id="tRipple2b"></div>
         </div>
         <div class="t-pcard" id="tCard3">
           <div class="t-plus" id="tPlus3"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg></div>
           <div class="t-check" id="tCheck3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="t-ripple" id="tRipple3"></div>
+          <div class="t-ripple2" id="tRipple3b"></div>
         </div>
         <div class="t-pcard"></div>
       </div>
@@ -383,7 +379,7 @@ ul{list-style:none;padding:0;margin:0;}
       <div class="t-tap" id="tTap"></div>
     </div>
   </div>
-  <div class="t-tagline">Vitrin cebinde.</div>
+  <div class="t-tagline">Her ürün, tek mesaj.</div>
   <div class="t-steps-row">
     <span class="t-sl" id="tsl1">Seç</span>
     <span class="t-sdot">›</span>
@@ -1020,18 +1016,19 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
   const badge   = document.getElementById('tIBadge')
   const island  = document.getElementById('tIsland')
   const iwa     = document.getElementById('tIWa')
+  const glare   = document.getElementById('tGlare')
   const g = id => document.getElementById(id)
 
-  // Positions inside .t-screen (194×408px):
-  // Grid top: 88px, padding: 6px, card w: 87px, card h: 116px
-  // Card1 + center: (75, 112) → cursor offset -11: (64, 101)
-  // Card2 + center: (168, 112) → (157, 101)
-  // Card3 + center: (75, 234) → (64, 223)
-  // WA btn center:  (148, 367) → (137, 356)
-  const P1  = { l: 64,  t: 101 }
-  const P2  = { l: 157, t: 101 }
-  const P3  = { l: 64,  t: 223 }
-  const PWA = { l: 137, t: 356 }
+  // Grid top:78px, padding:6px → col w:88px, row h:117px
+  // + btn within card: top:5 right:5 size:26 → center (70,18)
+  // Card1 screen(6,84) → +(76,102) → cursor(65,91)
+  // Card2 screen(100,84) → +(170,102) → cursor(159,91)
+  // Card3 screen(6,207) → +(76,225) → cursor(65,214)
+  // WA: island bottom:8 h:40 → top:360, center y:380 x:148 → cursor(137,369)
+  const P1  = { l: 65,  t: 91  }
+  const P2  = { l: 159, t: 91  }
+  const P3  = { l: 65,  t: 214 }
+  const PWA = { l: 137, t: 369 }
 
   function mv (pos, slow) {
     tap.classList.toggle('slow', !!slow)
@@ -1039,11 +1036,12 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
     tap.style.top  = pos.t + 'px'
   }
 
-  function doTap (plusId, checkId, rippleId, cardId, count) {
-    const p = g(plusId), c = g(checkId), r = g(rippleId), card = g(cardId)
+  function doTap (plusId, checkId, rippleId, ripple2Id, cardId, count) {
+    const p = g(plusId), c = g(checkId), r = g(rippleId), r2 = g(ripple2Id), card = g(cardId)
     tap.classList.remove('pulse'); void tap.offsetWidth; tap.classList.add('pulse')
     p.classList.add('tapped')
     r.classList.remove('pop'); void r.offsetWidth; r.classList.add('pop')
+    r2.classList.remove('pop'); void r2.offsetWidth; r2.classList.add('pop')
     setTimeout(() => {
       card.classList.add('selected')
       c.classList.add('on')
@@ -1062,53 +1060,38 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
     })
   }
 
-  // Real time
-  ;(function () {
-    const now = new Date()
-    const t = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0')
-    document.getElementById('tTime').textContent = t
-  })()
-
-  // Real battery
-  if ('getBattery' in navigator) {
-    navigator.getBattery().then(b => {
-      const pct = Math.round(b.level * 100)
-      const fill = document.getElementById('tBattFill')
-      if (!fill) return
-      fill.style.width = pct + '%'
-      fill.style.background = pct <= 20 ? '#ff3b30' : pct <= 40 ? '#ff9500' : '#0d0d0d'
-    }).catch(() => {})
-  }
-
   let timer
-  function close () { overlay.classList.add('hiding'); setTimeout(() => overlay.remove(), 350) }
+  function close () { overlay.classList.add('hiding'); setTimeout(() => overlay.remove(), 500) }
 
   mv(P1)
 
-  // Phone animates in 0.7s → cursor starts at 0.9s
-  setTimeout(() => { tap.classList.add('visible'); step(1) }, 900)
+  // Glare fires as phone lands (~0.9s into entry animation)
+  setTimeout(() => glare.classList.add('sweep'), 900)
 
-  // Fast taps
-  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tCard1', 1), 1400)
-  setTimeout(() => mv(P2), 1800)
-  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tCard2', 2), 2100)
-  setTimeout(() => mv(P3), 2480)
-  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tCard3', 3), 2780)
+  // Cursor appears, step 1 activates
+  setTimeout(() => { tap.classList.add('visible'); step(1) }, 1100)
 
-  // Island + step 2 (slows here)
-  setTimeout(() => { island.classList.add('up'); step(2) }, 3300)
+  // Three quick taps
+  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tRipple1b','tCard1', 1), 1550)
+  setTimeout(() => mv(P2), 1950)
+  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tRipple2b','tCard2', 2), 2250)
+  setTimeout(() => mv(P3), 2620)
+  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tRipple3b','tCard3', 3), 2920)
 
-  // Cursor drifts slowly to WA
-  setTimeout(() => mv(PWA, true), 4000)
+  // Island springs up with glow, step 2
+  setTimeout(() => { island.classList.add('up', 'glow'); step(2) }, 3450)
 
-  // Tap WA — step 3
+  // Cursor drifts slowly to WA button
+  setTimeout(() => mv(PWA, true), 4150)
+
+  // Tap WA — glow + step 3
   setTimeout(() => {
     tap.classList.remove('pulse'); void tap.offsetWidth; tap.classList.add('pulse')
-    iwa.classList.add('tapped')
+    iwa.classList.add('tapped', 'glow')
     step(3)
-  }, 4900)
+  }, 5100)
 
-  timer = setTimeout(close, 6500)
+  timer = setTimeout(close, 7000)
   overlay.addEventListener('click', () => { clearTimeout(timer); close() })
 })()
 
