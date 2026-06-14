@@ -255,7 +255,7 @@ ul{list-style:none;padding:0;margin:0;}
 .t-iwa{background:#25d366;color:#fff;border-radius:100px;padding:5px 8px;font-size:9px;font-weight:700;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:3px;white-space:nowrap;transition:transform .15s,background .15s;}
 .t-iwa.tapped{transform:scale(.94);background:#1ea854;}
 /* Tap cursor */
-.t-tap{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.95);box-shadow:0 2px 12px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s,left .55s var(--ease-out),top .55s var(--ease-out),transform .15s;}
+.t-tap{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.95);box-shadow:0 2px 12px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s,left .85s var(--ease-out),top .85s var(--ease-out),transform .15s;}
 .t-tap.visible{opacity:1;}
 .t-tap.pulse{animation:tTapPulse .35s var(--ease-spring);}
 @keyframes tTapPulse{0%{transform:scale(1);}40%{transform:scale(.65);}100%{transform:scale(1);}}
@@ -991,41 +991,41 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
   // Place tap cursor at + button, hidden
   moveTap(POS_PLUS)
 
-  // 0.5s → tap cursor appears
-  setTimeout(() => tap.classList.add('visible'), 500)
+  // 0.8s → tap cursor appears
+  setTimeout(() => tap.classList.add('visible'), 800)
 
-  // 1.0s → tap fires on + button
+  // 1.8s → tap fires on + button
   setTimeout(() => {
     pulseTap()
     plus.classList.add('tapped')
     ripple.classList.add('pop')
-  }, 1000)
+  }, 1800)
 
-  // 1.4s → card selected + checkmark
+  // 2.4s → card selected + checkmark
   setTimeout(() => {
     card1.classList.add('selected')
     check.classList.add('on')
     plus.classList.remove('tapped')
-  }, 1400)
+  }, 2400)
 
-  // 1.8s → island slides up + caption change
+  // 3.2s → island slides up + caption change
   setTimeout(() => {
     island.classList.add('up')
     setCaption('WhatsApp\'tan sor')
-  }, 1800)
+  }, 3200)
 
-  // 2.3s → tap cursor moves to WA button
-  setTimeout(() => moveTap(POS_WA), 2300)
+  // 4.2s → tap cursor moves to WA button
+  setTimeout(() => moveTap(POS_WA), 4200)
 
-  // 2.9s → tap fires on WA button
+  // 5.2s → tap fires on WA button
   setTimeout(() => {
     pulseTap()
     iwa.classList.add('tapped')
     setCaption('Mesaj gönderildi ✓')
-  }, 2900)
+  }, 5200)
 
-  // 4.0s → auto dismiss
-  timer = setTimeout(closeTutorial, 4200)
+  // 7.0s → auto dismiss
+  timer = setTimeout(closeTutorial, 7200)
 
   overlay.addEventListener('click', () => { clearTimeout(timer); closeTutorial() })
 })()
