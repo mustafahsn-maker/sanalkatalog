@@ -217,25 +217,52 @@ ul{list-style:none;padding:0;margin:0;}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
 /* TUTORIAL OVERLAY */
-#tutorialOverlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;}
-#tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .3s var(--ease-out);}
-.t-card{background:#fff;border-radius:24px;padding:28px 24px 22px;max-width:300px;width:100%;cursor:default;animation:tCardIn .35s var(--ease-spring);}
-@keyframes tCardIn{from{opacity:0;transform:scale(.92) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.t-title{font-size:11px;font-weight:700;color:#aaa;letter-spacing:.07em;text-transform:uppercase;margin-bottom:18px;}
-.t-step{display:flex;align-items:center;gap:14px;padding:10px 0;opacity:0;transform:translateY(6px);transition:opacity .4s var(--ease-out),transform .4s var(--ease-out);}
-.t-step.on{opacity:1;transform:translateY(0);}
-.t-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;}
-.t-icon-add{background:#0d0d0d;}
-.t-icon-list{background:#f3f3f3;}
-.t-icon-wa{background:#25d366;}
-.t-label{font-size:14px;font-weight:600;color:#0d0d0d;line-height:1.2;}
-.t-sub{font-size:12px;color:#999;margin-top:2px;}
-.t-sep{width:1.5px;height:18px;background:#e8e8e8;margin-left:22px;opacity:0;transition:opacity .3s;}
-.t-sep.on{opacity:1;}
-.t-bar-wrap{margin-top:22px;height:3px;background:#f0f0f0;border-radius:3px;overflow:hidden;}
-.t-bar{height:100%;background:#0d0d0d;transform-origin:left;animation:tBar 3.5s linear forwards;}
-@keyframes tBar{from{transform:scaleX(1);}to{transform:scaleX(0);}}
-.t-hint{margin-top:10px;font-size:11px;color:#c0c0c0;text-align:center;}
+#tutorialOverlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;cursor:pointer;}
+#tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .3s;}
+/* Phone frame */
+.t-phone{width:200px;height:360px;background:#f5f5f5;border-radius:28px;overflow:hidden;position:relative;box-shadow:0 0 0 9px #1c1c1c,0 0 0 10px #2e2e2e,0 28px 64px rgba(0,0,0,.7);animation:tPhoneIn .4s var(--ease-spring);}
+@keyframes tPhoneIn{from{opacity:0;transform:scale(.88) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
+/* Topbar inside phone */
+.t-topbar{height:40px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 10px;gap:7px;}
+.t-topbar-name{width:68px;height:9px;background:#d4d4d4;border-radius:4px;}
+.t-topbar-dots{margin-left:auto;display:flex;gap:5px;}
+.t-topbar-dots span{width:8px;height:8px;border-radius:50%;background:#d4d4d4;}
+/* Product grid */
+.t-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px;}
+.t-pcard{aspect-ratio:3/4;border-radius:7px;position:relative;overflow:hidden;border:1.5px solid transparent;transition:border-color .25s;}
+.t-pcard:nth-child(1){background:linear-gradient(145deg,#ede0cc,#cdb896);}
+.t-pcard:nth-child(2){background:#ddd;}
+.t-pcard:nth-child(3){background:#e4e4e4;}
+.t-pcard:nth-child(4){background:#d8d8d8;}
+.t-pcard.selected{border-color:#0d0d0d;}
+/* + button */
+.t-plus{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.96);border:1.2px solid rgba(0,0,0,.14);display:grid;place-items:center;box-shadow:0 1px 5px rgba(0,0,0,.1);transition:background .2s,transform .15s;}
+.t-plus svg{transition:stroke .2s;}
+.t-plus.tapped{background:#0d0d0d;transform:scale(1.25);}
+.t-plus.tapped svg{stroke:#fff;}
+/* Checkmark overlay */
+.t-checkmark{position:absolute;inset:0;background:rgba(13,13,13,.2);display:grid;place-items:center;opacity:0;transition:opacity .25s;}
+.t-checkmark.on{opacity:1;}
+/* Tap ripple */
+.t-ripple{position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.5);transform:translate(-50%,-50%);pointer-events:none;}
+.t-ripple.pop{animation:tRipple .4s ease-out forwards;}
+@keyframes tRipple{to{width:80px;height:80px;opacity:0;}}
+/* Island bar */
+.t-island{position:absolute;bottom:-56px;left:7px;right:7px;height:40px;background:#0d0d0d;border-radius:100px;display:flex;align-items:center;padding:4px;transition:bottom .45s var(--ease-spring);}
+.t-island.up{bottom:8px;}
+.t-ibadge{width:26px;height:26px;background:#fff;color:#0d0d0d;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;margin-left:5px;}
+.t-itext{font-size:10px;color:rgba(255,255,255,.65);flex:1;margin-left:7px;font-family:'DM Sans',sans-serif;}
+.t-iwa{background:#25d366;color:#fff;border-radius:100px;padding:5px 8px;font-size:9px;font-weight:700;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:3px;white-space:nowrap;transition:transform .15s,background .15s;}
+.t-iwa.tapped{transform:scale(.94);background:#1ea854;}
+/* Tap cursor */
+.t-tap{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.95);box-shadow:0 2px 12px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s,left .55s var(--ease-out),top .55s var(--ease-out),transform .15s;}
+.t-tap.visible{opacity:1;}
+.t-tap.pulse{animation:tTapPulse .35s var(--ease-spring);}
+@keyframes tTapPulse{0%{transform:scale(1);}40%{transform:scale(.65);}100%{transform:scale(1);}}
+/* Caption */
+.t-caption{font-family:'DM Sans',system-ui,sans-serif;font-size:15px;font-weight:600;color:#fff;text-align:center;letter-spacing:-.01em;transition:opacity .22s;}
+.t-caption.fade{opacity:0;}
+.t-skip{font-family:'DM Sans',system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.03em;}
 </style>
 </head>
 <body>
@@ -268,31 +295,37 @@ ul{list-style:none;padding:0;margin:0;}
 </section>
 
 <div id="tutorialOverlay">
-  <div class="t-card" id="tutorialCard">
-    <div class="t-title">Nasıl kullanılır?</div>
-    <div class="t-step" id="ts1">
-      <div class="t-icon t-icon-add">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
-      </div>
-      <div><div class="t-label">Ürünlere dokun</div><div class="t-sub">Fotoğraf köşesindeki + ile seç</div></div>
+  <div class="t-phone">
+    <div class="t-topbar">
+      <div class="t-topbar-name"></div>
+      <div class="t-topbar-dots"><span></span><span></span><span></span></div>
     </div>
-    <div class="t-sep" id="tsep1"></div>
-    <div class="t-step" id="ts2">
-      <div class="t-icon t-icon-list">
-        <div style="background:#0d0d0d;color:#fff;border-radius:100px;padding:4px 10px;font-size:12px;font-weight:700;min-width:28px;text-align:center;">3</div>
+    <div class="t-grid">
+      <div class="t-pcard" id="tCard1">
+        <div class="t-plus" id="tPlus">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div class="t-checkmark" id="tCheck">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="t-ripple" id="tRipple"></div>
       </div>
-      <div><div class="t-label">Listemde topla</div><div class="t-sub">İstediğin kadar ürün ekle</div></div>
+      <div class="t-pcard"></div>
+      <div class="t-pcard"></div>
+      <div class="t-pcard"></div>
     </div>
-    <div class="t-sep" id="tsep2"></div>
-    <div class="t-step" id="ts3">
-      <div class="t-icon t-icon-wa">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.89.523 3.66 1.435 5.18L2.047 22l4.932-1.365A9.954 9.954 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.95 7.95 0 0 1-4.07-1.116l-.292-.174-3.035.841.82-2.965-.19-.304A7.96 7.96 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8Zm4.406-5.884c-.241-.12-1.427-.703-1.648-.784-.22-.08-.38-.12-.54.12-.16.24-.621.784-.762.944-.14.16-.281.18-.521.06-.241-.12-1.017-.375-1.937-1.195-.716-.638-1.2-1.426-1.34-1.666-.14-.24-.015-.37.105-.489.108-.107.24-.28.361-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.303-.74-1.784-.194-.467-.392-.403-.54-.41l-.46-.008a.884.884 0 0 0-.64.3c-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.617.573.248 1.02.395 1.368.506.574.183 1.097.157 1.51.095.46-.068 1.418-.58 1.618-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+    <div class="t-island" id="tIsland">
+      <div class="t-ibadge">1</div>
+      <span class="t-itext">Listem</span>
+      <div class="t-iwa" id="tIWa">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.89.52 3.66 1.43 5.18L2.05 22l4.93-1.37A9.95 9.95 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm0 18c-1.46 0-2.83-.4-4.01-1.09l-.28-.17-3.04.84.82-2.96-.19-.3A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8Z"/></svg>
+        WhatsApp'tan Sor
       </div>
-      <div><div class="t-label">WhatsApp'tan sor</div><div class="t-sub">Tek mesajla sipariş ver</div></div>
     </div>
-    <div class="t-bar-wrap"><div class="t-bar"></div></div>
-    <div class="t-hint">Geçmek için dokun</div>
+    <div class="t-tap" id="tTap"></div>
   </div>
+  <div class="t-caption" id="tCaption">Beğendiğin ürünlere dokun</div>
+  <div class="t-skip">Geçmek için ekrana dokun</div>
 </div>
 <div class="filter-bar">
   <div class="container filter-inner">
@@ -916,7 +949,38 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
 
 // ── TUTORIAL ──────────────────────────────────────────────────────────────────
 ;(function () {
-  const overlay = document.getElementById('tutorialOverlay')
+  const overlay  = document.getElementById('tutorialOverlay')
+  const tap      = document.getElementById('tTap')
+  const plus     = document.getElementById('tPlus')
+  const check    = document.getElementById('tCheck')
+  const card1    = document.getElementById('tCard1')
+  const ripple   = document.getElementById('tRipple')
+  const island   = document.getElementById('tIsland')
+  const iwa      = document.getElementById('tIWa')
+  const caption  = document.getElementById('tCaption')
+
+  // Positions inside the 200×360px phone:
+  // Card 1 + button center ≈ (79px, 65px) from phone top-left
+  // WA button center       ≈ (152px, 329px)
+  const POS_PLUS = { left: 68, top: 53 }
+  const POS_WA   = { left: 141, top: 317 }
+
+  function moveTap (pos) {
+    tap.style.left = pos.left + 'px'
+    tap.style.top  = pos.top  + 'px'
+  }
+
+  function pulseTap () {
+    tap.classList.remove('pulse')
+    void tap.offsetWidth
+    tap.classList.add('pulse')
+  }
+
+  function setCaption (txt) {
+    caption.classList.add('fade')
+    setTimeout(() => { caption.textContent = txt; caption.classList.remove('fade') }, 230)
+  }
+
   let timer
 
   function closeTutorial () {
@@ -924,20 +988,46 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
     setTimeout(() => overlay.remove(), 320)
   }
 
-  setTimeout(() => document.getElementById('ts1').classList.add('on'), 120)
-  setTimeout(() => document.getElementById('tsep1').classList.add('on'), 520)
-  setTimeout(() => document.getElementById('ts2').classList.add('on'), 720)
-  setTimeout(() => document.getElementById('tsep2').classList.add('on'), 1100)
-  setTimeout(() => document.getElementById('ts3').classList.add('on'), 1300)
+  // Place tap cursor at + button, hidden
+  moveTap(POS_PLUS)
 
-  timer = setTimeout(closeTutorial, 3500)
+  // 0.5s → tap cursor appears
+  setTimeout(() => tap.classList.add('visible'), 500)
 
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) { clearTimeout(timer); closeTutorial() }
-  })
-  document.getElementById('tutorialCard').addEventListener('click', function () {
-    clearTimeout(timer); closeTutorial()
-  })
+  // 1.0s → tap fires on + button
+  setTimeout(() => {
+    pulseTap()
+    plus.classList.add('tapped')
+    ripple.classList.add('pop')
+  }, 1000)
+
+  // 1.4s → card selected + checkmark
+  setTimeout(() => {
+    card1.classList.add('selected')
+    check.classList.add('on')
+    plus.classList.remove('tapped')
+  }, 1400)
+
+  // 1.8s → island slides up + caption change
+  setTimeout(() => {
+    island.classList.add('up')
+    setCaption('WhatsApp\'tan sor')
+  }, 1800)
+
+  // 2.3s → tap cursor moves to WA button
+  setTimeout(() => moveTap(POS_WA), 2300)
+
+  // 2.9s → tap fires on WA button
+  setTimeout(() => {
+    pulseTap()
+    iwa.classList.add('tapped')
+    setCaption('Mesaj gönderildi ✓')
+  }, 2900)
+
+  // 4.0s → auto dismiss
+  timer = setTimeout(closeTutorial, 4200)
+
+  overlay.addEventListener('click', () => { clearTimeout(timer); closeTutorial() })
 })()
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
