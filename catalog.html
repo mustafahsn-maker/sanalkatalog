@@ -226,7 +226,7 @@ ul{list-style:none;padding:0;margin:0;}
 #tutorialOverlay.hiding{opacity:0;pointer-events:none;transition:opacity .5s cubic-bezier(.4,0,.2,1);}
 
 /* iPhone 15 frame */
-.t-frame{width:204px;height:418px;background:linear-gradient(155deg,#2f2f33 0%,#1a1a1e 30%,#222226 70%,#1e1e22 100%);border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 0 0 3px #1a1a1e,0 50px 100px rgba(0,0,0,.95),0 20px 40px rgba(0,0,0,.6),0 0 80px rgba(34,197,94,.05);animation:tPhoneIn .95s var(--ease-spring) both;}
+.t-frame{width:204px;height:418px;background:linear-gradient(155deg,#2f2f33 0%,#1a1a1e 30%,#222226 70%,#1e1e22 100%);border-radius:44px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 0 0 3px #1a1a1e,0 50px 100px rgba(0,0,0,.95),0 20px 40px rgba(0,0,0,.6),0 0 80px rgba(34,197,94,.05);animation:tPhoneIn .75s var(--ease-spring) both;}
 @keyframes tPhoneIn{
   0%{opacity:0;transform:scale(.55) translateY(80px);filter:blur(28px);}
   45%{opacity:1;filter:blur(0);}
@@ -245,7 +245,7 @@ ul{list-style:none;padding:0;margin:0;}
 
 /* Glare sweep (ışık yansıması) */
 .t-glare{position:absolute;inset:0;z-index:20;border-radius:40px;pointer-events:none;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.24) 48%,rgba(255,255,255,.1) 52%,transparent 68%);opacity:0;transform:translateX(-120%);}
-.t-glare.sweep{animation:tGlareSweep .78s cubic-bezier(.23,1,.32,1) .9s forwards;}
+.t-glare.sweep{animation:tGlareSweep .7s cubic-bezier(.23,1,.32,1) .65s forwards;}
 @keyframes tGlareSweep{0%{opacity:0;transform:translateX(-120%);}15%{opacity:1;}85%{opacity:.8;}100%{opacity:0;transform:translateX(120%);}}
 
 /* Dynamic Island */
@@ -316,7 +316,7 @@ ul{list-style:none;padding:0;margin:0;}
 .t-sdot{color:rgba(255,255,255,.12);font-size:9px;}
 
 /* Gradient tagline */
-.t-tagline{font-size:26px;font-weight:800;letter-spacing:-.05em;text-align:center;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.8) 45%,#22c55e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tTagIn .65s .75s var(--ease-spring) both;}
+.t-tagline{font-size:26px;font-weight:800;letter-spacing:-.05em;text-align:center;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.8) 45%,#22c55e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tTagIn .55s .5s var(--ease-spring) both;}
 @keyframes tTagIn{from{opacity:0;transform:translateY(14px) scale(.93);}to{opacity:1;transform:translateY(0) scale(1);}}
 .t-skip{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.06em;text-transform:uppercase;}
 </style>
@@ -1087,24 +1087,24 @@ fetchData()
 
   mv(P1)
 
-  setTimeout(() => glare.classList.add('sweep'), 900)
-  setTimeout(() => { tap.classList.add('visible'); step(1) }, 1100)
+  setTimeout(() => glare.classList.add('sweep'), 650)
+  setTimeout(() => { tap.classList.add('visible'); step(1) }, 800)
 
-  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tRipple1b','tCard1', 1), 1550)
-  setTimeout(() => mv(P2), 1950)
-  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tRipple2b','tCard2', 2), 2250)
-  setTimeout(() => mv(P3), 2620)
-  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tRipple3b','tCard3', 3), 2920)
+  setTimeout(() => doTap('tPlus1','tCheck1','tRipple1','tRipple1b','tCard1', 1), 1100)
+  setTimeout(() => mv(P2), 1420)
+  setTimeout(() => doTap('tPlus2','tCheck2','tRipple2','tRipple2b','tCard2', 2), 1650)
+  setTimeout(() => mv(P3), 1950)
+  setTimeout(() => doTap('tPlus3','tCheck3','tRipple3','tRipple3b','tCard3', 3), 2180)
 
-  setTimeout(() => { island.classList.add('up', 'glow'); step(2) }, 3450)
-  setTimeout(() => mv(PWA, true), 4150)
+  setTimeout(() => { island.classList.add('up', 'glow'); step(2) }, 2620)
+  setTimeout(() => mv(PWA, true), 3150)
   setTimeout(() => {
     tap.classList.remove('pulse'); void tap.offsetWidth; tap.classList.add('pulse')
     iwa.classList.add('tapped', 'glow')
     step(3)
-  }, 5100)
+  }, 3900)
 
-  timer = setTimeout(close, 7000)
+  timer = setTimeout(close, 5100)
   overlay.addEventListener('click', () => { clearTimeout(timer); close() })
 })()
 </script>
