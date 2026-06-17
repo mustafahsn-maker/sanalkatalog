@@ -414,6 +414,7 @@ ul{list-style:none;padding:0;margin:0;}
     <span class="filter-sep"></span>
     <div class="filter-select-wrap">
       <select id="sortBy" aria-label="Sıralama ölçütü">
+        <option value="store">Önerilen Sıra</option>
         <option value="newest">Yeniden Eskiye</option>
         <option value="price-asc">Fiyat Artan</option>
         <option value="price-desc">Fiyat Azalan</option>
@@ -496,7 +497,7 @@ let STORE    = null
 let PRODUCTS = []  // [{id, brand, name, code, price, status, variations:[{id,name,image_url,sort_order,interest_count}]}]
 let list     = JSON.parse(localStorage.getItem(SK) || '[]')
 let filterBrand = 'all'
-let sortMode    = 'newest'
+let sortMode    = 'store'
 let searchQ     = ''
 let panelOpen   = false
 
@@ -562,7 +563,7 @@ async function fetchData () {
 
   // Products with variations — always fetch first (liste mode also needs them)
   const prodRes = await fetch(
-    `${SB_URL}/rest/v1/products?store_slug=eq.${encodeURIComponent(slug)}&status=eq.Aktif&select=*,product_variations(*)&order=created_at.desc`,
+    `${SB_URL}/rest/v1/products?store_slug=eq.${encodeURIComponent(slug)}&status=eq.Aktif&select=*,product_variations(*)&order=sort_order.asc.nullslast,created_at.desc`,
     { headers: h }
   )
   const raw = await prodRes.json()
@@ -576,6 +577,7 @@ async function fetchData () {
     note: p.note || '',
     price: p.price || '0',
     createdAt: p.created_at,
+    sortOrder: p.sort_order ?? 0,
     variations: (p.product_variations || []).sort((a, b) => a.sort_order - b.sort_order)
   }))
 
@@ -623,6 +625,7 @@ function filtered () {
       p.variations.some(v => v.name.toLowerCase().includes(q))
     )
   }
+  if (sortMode === 'store') r.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
   if (sortMode === 'newest') r.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
   if (sortMode === 'price-asc') r.sort((a, b) => (+a.price || 0) - (+b.price || 0))
   if (sortMode === 'price-desc') r.sort((a, b) => (+b.price || 0) - (+a.price || 0))
