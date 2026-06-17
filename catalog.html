@@ -547,11 +547,12 @@ async function fetchData () {
 
   const h = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
 
-  // Store info
-  const storeRes = await fetch(
-    `${SB_URL}/rest/v1/stores?slug=eq.${encodeURIComponent(slug)}&limit=1`,
-    { headers: h }
-  )
+  // Store info — güvenli RPC: yalnızca herkese açık kolonlar döner, user_id sızdırılmaz
+  const storeRes = await fetch(`${SB_URL}/rest/v1/rpc/get_store_public`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_slug: slug })
+  })
   const stores = await storeRes.json()
   if (!Array.isArray(stores) || !stores[0]) {
     showError('Bu mağaza bulunamadı.'); return
@@ -853,24 +854,20 @@ function saveLead (name, phone, variationIds) {
     leads.unshift({ name, phone, items: variationIds.length, store: STORE?.store_name || '', slug: STORE?.slug || '', ts: new Date().toISOString() })
     localStorage.setItem('sk_leads', JSON.stringify(leads.slice(0, 200)))
   } catch (_) {}
-  const userId = STORE?.user_id
   const storeSlug = STORE?.slug
-  if (!userId || !storeSlug) return
-  const payload = {
-    id: crypto.randomUUID(),
-    store_slug: storeSlug,
-    user_id: userId,
-    name,
-    phone: phone || '',
-    interest_count: variationIds.length,
-    last_seen: new Date().toISOString(),
-    marketing_opt_in: false,
-    variation_ids: variationIds
-  }
-  fetch(`${SB_URL}/rest/v1/leads`, {
+  if (!storeSlug) return
+  // Lead, SECURITY DEFINER RPC üzerinden gönderilir — user_id sunucuda slug'dan
+  // türetilir, istemciye hiç gelmez; doğrudan tabloya anon insert kapatıldı.
+  fetch(`${SB_URL}/rest/v1/rpc/submit_lead`, {
     method: 'POST',
     headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      p_slug: storeSlug,
+      p_name: name,
+      p_phone: phone || '',
+      p_variation_ids: variationIds,
+      p_interest_count: variationIds.length
+    })
   }).catch(() => {})
 }
 
