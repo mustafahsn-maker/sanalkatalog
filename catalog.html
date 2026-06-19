@@ -96,7 +96,7 @@ ul{list-style:none;padding:0;margin:0;}
 @media(max-width:640px){.variants-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
 
 .variant-card{transition:transform .18s var(--ease-out);}
-.variant-img{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;background:#e8e8e8;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);border:1px solid var(--border);transition:border-color .18s var(--ease-out),box-shadow .18s var(--ease-out);}
+.variant-img{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;background:#e8e8e8;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);border:1px solid var(--border);cursor:pointer;transition:border-color .18s var(--ease-out),box-shadow .18s var(--ease-out);}
 .variant-card.in-list .variant-img{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg);}
 .variant-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s var(--ease-out);}
 @media(hover:hover) and (pointer:fine){
@@ -670,7 +670,7 @@ function render () {
     p.variations.forEach((v, vi) => {
       const il = inList(p.id, v.id)
       h += `<div class="variant-card${il ? ' in-list' : ''}">`
-      h += `<div class="variant-img">`
+      h += `<div class="variant-img" data-a="t" data-pid="${p.id}" data-vid="${v.id}">`
       if (v.image_url) {
         h += `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>`
         h += `<div class="img-placeholder" style="display:none">${placeholderSVG()}</div>`
@@ -1040,6 +1040,8 @@ fetchData()
 ;(function () {
   const overlay = document.getElementById('tutorialOverlay')
   if (!overlay) return
+  // Liste sayfası (?liste=) açılışında tutorial animasyonu gösterme — kaldır.
+  if (new URLSearchParams(window.location.search).get('liste')) { overlay.remove(); return }
   const tap     = document.getElementById('tTap')
   const badge   = document.getElementById('tIBadge')
   const island  = document.getElementById('tIsland')
