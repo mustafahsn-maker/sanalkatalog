@@ -402,7 +402,7 @@ ul{list-style:none;padding:0;margin:0;}
 <section class="hero">
   <div class="container">
     <h1 id="heroStoreName">Yükleniyor…</h1>
-    <p>Koleksiyona göz atın, beğendiğiniz renk ve modelleri listeleyin; WhatsApp'tan tek mesajla sipariş verin.</p>
+    <p id="heroSubtitle">Koleksiyona göz atın, beğendiğiniz renk ve modelleri listeleyin; WhatsApp'tan tek mesajla sipariş verin.</p>
   </div>
 </section>
 
@@ -497,6 +497,7 @@ let STORE    = null
 let PRODUCTS = []  // [{id, brand, name, code, price, status, variations:[{id,name,image_url,sort_order,interest_count}]}]
 let list     = JSON.parse(localStorage.getItem(SK) || '[]')
 let filterBrand = 'all'
+let categoryFilter = ''   // ?kategori= ile gelen etiket; boşsa filtre yok
 let sortMode    = 'store'
 let searchQ     = ''
 let panelOpen   = false
@@ -575,6 +576,7 @@ async function fetchData () {
     name: p.name || p.code || 'Ürün',
     code: p.code || '',
     note: p.note || '',
+    tags: Array.isArray(p.tags) ? p.tags : [],
     price: p.price || '0',
     createdAt: p.created_at,
     sortOrder: p.sort_order ?? 0,
@@ -591,8 +593,24 @@ async function fetchData () {
     body: JSON.stringify({ p_slug: slug })
   }).catch(() => {})
 
+  applyCategoryFilter()
   buildBrandFilter()
   render()
+}
+
+// ── KATEGORİ FİLTRESİ (?kategori= parametresi) ───────────────────────────────
+// İşletme paylaştığı linke ?kategori=<etiket> ekler; katalog yalnızca o etikete
+// sahip ürünleri gösterir ve başlıkta kategori adını öne çıkarır.
+function applyCategoryFilter () {
+  const raw = new URLSearchParams(window.location.search).get('kategori')
+  if (!raw) return
+  categoryFilter = raw.trim()
+  if (!categoryFilter) return
+  const heroTitle = document.getElementById('heroStoreName')
+  const heroSub   = document.getElementById('heroSubtitle')
+  if (heroTitle) heroTitle.textContent = categoryFilter
+  if (heroSub) heroSub.textContent = `${STORE?.store_name || ''} · ${categoryFilter} koleksiyonu`
+  document.title = `${categoryFilter} — ${STORE?.store_name || 'Katalog'}`
 }
 
 function applyStoreUI () {
@@ -615,6 +633,7 @@ function applyStoreUI () {
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function filtered () {
   let r = [...PRODUCTS]
+  if (categoryFilter) r = r.filter(p => p.tags.includes(categoryFilter))
   if (filterBrand !== 'all') r = r.filter(p => p.brand === filterBrand)
   if (searchQ) {
     const q = searchQ.toLowerCase()
