@@ -577,7 +577,7 @@ async function fetchData () {
   PRODUCTS = raw.map(p => ({
     id: p.id,
     brand: p.brand || '',
-    name: p.name || p.code || 'Ürün',
+    name: p.name || '',
     code: p.code || '',
     note: p.note || '',
     tags: Array.isArray(p.tags) ? p.tags : [],
@@ -678,8 +678,10 @@ function render () {
     h += `<div class="product-group" style="animation-delay:${stagger}ms">`
     h += `<div class="group-header">`
     h += `<div class="group-header-left">`
-    h += `<div class="group-title-row"><h2 class="group-name">${esc(p.name)}</h2>`
-    if (p.code) h += `<span class="group-code">${esc(p.code)}</span>`
+    h += `<div class="group-title-row">`
+    if (p.name) h += `<h2 class="group-name">${esc(p.name)}</h2>`
+    if (p.code && p.code !== p.name) h += `<span class="group-code">${esc(p.code)}</span>`
+    if (!p.name && !p.code) h += `<h2 class="group-name">—</h2>`
     h += `</div>`
     if (priceStr) h += `<span class="group-price">${priceStr}</span>`
     if (p.brand) h += `<span class="group-brand">Marka : ${esc(p.brand)}</span>`
@@ -796,7 +798,7 @@ function renderPanel () {
     if (!p || !v) return
     h += `<div class="panel-item">`
     h += `<div class="panel-item-thumb">${v.image_url ? `<img src="${esc(v.image_url)}" alt="${esc(v.name)}" loading="lazy"/>` : ''}</div>`
-    h += `<div class="panel-item-info"><div class="panel-item-name">${esc(p.brand ? p.brand + ' ' : '')}${esc(p.name)} — ${esc(v.name || '')}</div><div class="panel-item-sub">${esc(p.code || '')}</div></div>`
+    h += `<div class="panel-item-info"><div class="panel-item-name">${esc(p.brand ? p.brand + ' ' : '')}${esc(p.name || p.code || '')} — ${esc(v.name || '')}</div><div class="panel-item-sub">${esc(p.code && p.code !== p.name ? p.code : '')}</div></div>`
     h += `<span class="panel-item-price">${+p.price ? fmt(+p.price) : ''}</span>`
     h += `<button class="panel-item-remove" aria-label="Listeden çıkar" data-a="t" data-pid="${pid}" data-vid="${vid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`
     h += `</div>`
@@ -989,8 +991,8 @@ function checkListeMode () {
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;">${esc(p.brand || '')}</div>
-        <div style="font-size:14px;font-weight:500;">${esc(p.name)}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(v.name || '')}${p.code ? ' · <span style="font-family:ui-monospace,monospace;font-size:10px;">' + esc(p.code) + '</span>' : ''}</div>
+        <div style="font-size:14px;font-weight:500;">${esc(p.name || p.code || '')}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(v.name || '')}${p.code && p.code !== p.name ? ' · <span style="font-family:ui-monospace,monospace;font-size:10px;">' + esc(p.code) + '</span>' : ''}</div>
       </div>
       ${+p.price ? `<div style="font-size:15px;font-weight:700;flex-shrink:0;">${fmt(+p.price)}</div>` : ''}`
     listDiv.appendChild(item)
