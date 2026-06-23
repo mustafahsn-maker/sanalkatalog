@@ -556,11 +556,6 @@ async function fetchData () {
     body: JSON.stringify({ p_slug: slug })
   })
   const stores = await storeRes.json()
-  if (!Array.isArray(stores) || !stores[0]) {
-    showError('Bu mağaza bulunamadı.'); return
-  }
-  STORE = stores[0]
-  applyStoreUI()
 
   // Products with variations — always fetch first (liste mode also needs them)
   const prodRes = await fetch(
@@ -569,6 +564,15 @@ async function fetchData () {
   )
   const raw = await prodRes.json()
   if (!Array.isArray(raw)) { showError('Ürünler yüklenemedi.'); return }
+
+  if (Array.isArray(stores) && stores[0]) {
+    STORE = stores[0]
+  } else if (raw.length > 0) {
+    STORE = { store_name: slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), slug: slug, whatsapp_phone: '', location_text: '' }
+  } else {
+    showError('Bu mağaza bulunamadı.'); return
+  }
+  applyStoreUI()
 
   PRODUCTS = raw.map(p => ({
     id: p.id,
