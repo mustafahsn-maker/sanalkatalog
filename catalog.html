@@ -624,6 +624,10 @@ function applyStoreUI () {
   if (STORE.whatsapp_phone) {
     document.getElementById('waHeaderBtn').href = `https://wa.me/${STORE.whatsapp_phone}`
     document.getElementById('callBtn').href = `tel:+${STORE.whatsapp_phone}`
+  } else {
+    document.getElementById('waHeaderBtn').style.display = 'none'
+    document.getElementById('callBtn').style.display = 'none'
+    document.getElementById('islandWaBtn').style.display = 'none'
   }
   if (STORE.location_text) {
     const loc = STORE.location_text
@@ -687,7 +691,7 @@ function render () {
     if (p.brand) h += `<span class="group-brand">Marka : ${esc(p.brand)}</span>`
     h += `</div><div class="group-header-right">`
     h += `<button class="group-btn" data-a="ta" data-pid="${p.id}">${allIn ? 'Listeden Çıkar' : 'Tümünü Listele'}</button>`
-    h += `<button class="group-btn wa" data-a="wag" data-pid="${p.id}">WhatsApp</button>`
+    if (waPhone()) h += `<button class="group-btn wa" data-a="wag" data-pid="${p.id}">WhatsApp</button>`
     h += `</div></div>`
 
     if (p.note) h += `<p class="group-note">${esc(p.note)}</p>`
@@ -839,6 +843,7 @@ function buildShareURLWithCustomer (items, name, phone) {
 }
 
 function sendWhatsApp (items) {
+  if (!waPhone()) { toast('Bu mağazanın WhatsApp numarası henüz eklenmemiş.'); return }
   captureLeadAndSend((name, phone) => {
     const link = buildShareURLWithCustomer(items, name, phone)
     let msg = 'Bu listedeki ürünlerle ilgili bilgi almak istiyordum:\n' + link
