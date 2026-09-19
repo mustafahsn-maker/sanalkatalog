@@ -546,56 +546,24 @@ function findVariation (pid, vid) {
 // ── SUPABASE FETCH ────────────────────────────────────────────────────────────
 async function fetchData () {
   if (!slug) { showError('Mağaza adresi bulunamadı.'); return }
-
-  const h = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-
-  // Store info — güvenli RPC: yalnızca herkese açık kolonlar döner, user_id sızdırılmaz
-  const storeRes = await fetch(`${SB_URL}/rest/v1/rpc/get_store_public`, {
+  const storeRes = await fetch(`https://krtfqgymyudfqnipxpao.supabase.co/rest/v1/rpc/get_catalog_public`, {
     method: 'POST',
     headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({ p_slug: slug })
   })
-  const stores = await storeRes.json()
-  if (!Array.isArray(stores) || !stores[0]) {
-    showError('Bu mağaza bulunamadı.'); return
-  }
-  STORE = stores[0]
+  const catalog = await storeRes.json()
+  if (!storeRes.ok || !catalog || !catalog.store) { showError('Bu mağaza bulunamadı.'); return }
+  STORE = { slug: catalog.store.slug, store_name: catalog.store.title || 'Sanal Katalog', description: catalog.store.description || '', logo_url: catalog.store.logo_url || '' }
   applyStoreUI()
-
-  // Products with variations — always fetch first (liste mode also needs them)
-  const prodRes = await fetch(
-    `${SB_URL}/rest/v1/products?store_slug=eq.${encodeURIComponent(slug)}&status=eq.Aktif&select=*,product_variations(*)&order=sort_order.asc.nullslast,created_at.desc`,
-    { headers: h }
-  )
-  const raw = await prodRes.json()
-  if (!Array.isArray(raw)) { showError('Ürünler yüklenemedi.'); return }
-
-  PRODUCTS = raw.map(p => ({
-    id: p.id,
-    brand: p.brand || '',
-    name: p.name || p.code || 'Ürün',
-    code: p.code || '',
-    note: p.note || '',
-    tags: Array.isArray(p.tags) ? p.tags : [],
-    price: p.price || '0',
-    createdAt: p.created_at,
-    sortOrder: p.sort_order ?? 0,
-    variations: (p.product_variations || []).sort((a, b) => a.sort_order - b.sort_order)
+  PRODUCTS = (catalog.products || []).map(p => ({
+    id: p.id, brand: '', name: p.code || 'Ürün', code: p.code || '',
+    note: p.stock_status === 'tukendi' ? 'Stokta yok' : '', tags: [],
+    price: p.price || '0', createdAt: new Date().toISOString(), sortOrder: 0,
+    variations: [{ id: p.id, name: p.color || '', image_url: p.photo_url || '',
+      status: p.in_stock ? 'Aktif' : 'Gizli', stock: p.stock, stock_status: p.stock_status }]
   }))
-
-  // Check ?liste= mode (after products are loaded)
   if (checkListeMode()) return
-
-  // Katalog açılışını say
-  fetch(`${SB_URL}/rest/v1/rpc/increment_catalog_views`, {
-    method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ p_slug: slug })
-  }).catch(() => {})
-
-  applyCategoryFilter()
-  buildBrandFilter()
-  render()
+  applyCategoryFilter(); buildBrandFilter(); render()
 }
 
 // ── KATEGORİ FİLTRESİ (?kategori= parametresi) ───────────────────────────────
@@ -834,18 +802,22 @@ function buildShareURLWithCustomer (items, name, phone) {
 
 function sendWhatsApp (items) {
   captureLeadAndSend((name, phone) => {
-    const link = buildShareURLWithCustomer(items, name, phone)
-    let msg = 'Bu listedeki ürünlerle ilgili bilgi almak istiyordum:\n' + link
-    if (name) msg = name + ':\n' + msg
-    window.open(`https://wa.me/${waPhone()}?text=${encodeURIComponent(msg)}`, '_blank')
-    const vids = items.map(k => {
-      const [pid, vid] = k.split('::')
-      return findVariation(pid, vid)?.id || ''
+    if (!name) { toast('Talep göndermek için ad soyad zorunludur'); return }
+    const requestItems = items.map(k => {
+      const [pid, vid] = k.split('::'), v = findVariation(pid, vid)
+      return v ? { product_id: v.id, quantity: 1, variant: v.name || '' } : null
     }).filter(Boolean)
-    saveLead(name, phone, vids)
+    fetch(`https://krtfqgymyudfqnipxpao.supabase.co/rest/v1/rpc/submit_catalog_request`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_slug: STORE?.slug || slug, p_customer: { name, phone: phone || '' }, p_items: requestItems, p_note: '' })
+    }).then(async r => {
+      const data = await r.json()
+      if (!r.ok) throw new Error(data.message || data.error || 'Talep gönderilemedi')
+      list = []; save(); toast('Talebiniz firmaya iletildi')
+    }).catch(e => toast(e.message || 'Talep gönderilemedi'))
   })
 }
-
 function sendProductWhatsApp (pid) {
   const p = PRODUCTS.find(x => x.id === pid)
   if (!p) return
@@ -900,12 +872,12 @@ function createLeadModal () {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;font-family:'DM Sans',system-ui,sans-serif;">
       <div style="width:36px;height:4px;background:#e5e4e0;border-radius:2px;margin:0 auto 20px;"></div>
-      <h2 style="font-size:17px;font-weight:700;margin:0 0 4px;color:#0d0d0d;">WhatsApp'a bağlanıyor</h2>
-      <p style="font-size:13px;color:#888;margin:0 0 20px;">İsteğe bağlı bilgilerini bırakabilirsin.</p>
-      <input id="leadName" placeholder="Ad Soyad (isteğe bağlı)" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;color:#0d0d0d;">
+      <h2 style="font-size:17px;font-weight:700;margin:0 0 4px;color:#0d0d0d;">Sipariş talebi gönder</h2>
+      <p style="font-size:13px;color:#888;margin:0 0 20px;">Talep firmaya iletilir; firma onayından sonra normal siparişe alınır.</p>
+      <input id="leadName" placeholder="Ad Soyad (zorunlu)" autocomplete="name" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;color:#0d0d0d;">
       <input id="leadPhone" placeholder="Telefon (isteğe bağlı)" type="tel" autocomplete="tel" style="width:100%;box-sizing:border-box;border:1px solid #e5e4e0;border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;color:#0d0d0d;">
-      <button id="leadContinue" style="width:100%;background:#25d366;color:#fff;border:none;border-radius:100px;padding:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:8px;">WhatsApp'ı Aç</button>
-      <button id="leadSkip" style="width:100%;background:transparent;color:#888;border:1px solid #e5e4e0;border-radius:100px;padding:14px;font-size:15px;font-family:inherit;cursor:pointer;">Atla</button>
+      <button id="leadContinue" style="width:100%;background:#25d366;color:#fff;border:none;border-radius:100px;padding:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:8px;">Talep Gönder</button>
+      <button id="leadSkip" style="width:100%;background:transparent;color:#888;border:1px solid #e5e4e0;border-radius:100px;padding:14px;font-size:15px;font-family:inherit;cursor:pointer;">Vazgeç</button>
     </div>`
   document.body.appendChild(modal)
   modal.addEventListener('click', e => { if (e.target === modal) { closeLeadModal(); _pendingWhatsAppFn && _pendingWhatsAppFn('', ''); _pendingWhatsAppFn = null } })
@@ -1052,6 +1024,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && panelOpen)
 // ── INIT ──────────────────────────────────────────────────────────────────────
 createLeadModal()
 fetchData()
+setInterval(fetchData, 60000)
 </script>
 
 <!-- ═══ TUTORIAL OVERLAY — script ═══ -->
